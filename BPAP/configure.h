@@ -9,4 +9,3 @@
 void configure_pins();
 
 #endif
-// make some random changes
