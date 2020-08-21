@@ -23,17 +23,22 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
     posCur = getAngle();
     //line 2
-    Serial.print("Cur ");
-    Serial.print(posCur);
-    Serial.print("\t| BPM ");
-    Serial.print(getBPM());
-    Serial.print("\t| bag ");
-    Serial.print(getSwitchToBag());
-    Serial.print("\t| I:E 1:");
-    Serial.print(getIE());
-    Serial.print("\t| Pressure ");
-    Serial.print(pressCur);
-    Serial.print('\r');
+     str = "Cur " + to_string(posCur) + "\t| BPM " to_string(getBPM()) + "\t| bag "
+     str += to_string(getSwitchToBag()) + "\t| I:E 1:" + to_string(getIE())
+     str += "\t| Pressure " + pressCur
+     Serial.print(str);
+     Serial.print(string(str.length(),'\b'));
+     // Serial.print("Cur ");
+     // Serial.print(posCur);
+     // Serial.print("\t| BPM ");
+     // Serial.print(getBPM());
+     // Serial.print("\t| bag ");
+     // Serial.print(getSwitchToBag());
+     // Serial.print("\t| I:E 1:");
+     // Serial.print(getIE());
+     // Serial.print("\t| Pressure ");
+     // Serial.print(pressCur);
+     // Serial.print('\r');
     switch(RUN_STATE)
     {
         case RUN_SETUP:
