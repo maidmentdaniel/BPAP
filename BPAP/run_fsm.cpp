@@ -8,6 +8,8 @@ float pressCur = 0.00;
 float pressThresh = -2.00;
 float posCur = 0.00;
 
+string str = "";
+
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
     PREV_STATE = RUN_STATE;
@@ -32,7 +34,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     Serial.print("\t| Pressure ");
     Serial.print(pressCur);
     Serial.print('\r');
-    // Serial.print();
     switch(RUN_STATE)
     {
         case RUN_SETUP:
