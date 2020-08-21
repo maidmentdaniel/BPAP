@@ -1,0 +1,15 @@
+  // Pull down on 6
+  // PIN 6 == OC4A
+  // ==> TIMER 4
+  // TCCR34A – Timer/Counter 4 Control Register A
+  //  7       |6      |5      |4      |3      |2      |1      |0
+  //  COM4A1  |COM4A0 |COM4B1 |COM4B0 |COM4C1 |COM4C0 |WGM41  |WMW40
+  // Clear the control register.
+
+//  // Compare Output Mode, Fast PWM Table 17-4, page 155
+//  // Clear OC4A on compare match, set OC4A at BOTTOM (non-inverting mode)
+//  
+//  // TCCR1B – Timer/Counter 1 Control Register B
+//  //  7       |6      |5      |4      |3      |2    |1    |0
+//  //  ICNC4   |ICES4  |RESV   |WGM43  |WGM42  |CS42 |CS41 |CS40
+//  // Fast PWM mode // Fast PWM | ICR4 | BOTTOM  | TOP
