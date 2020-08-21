@@ -17,7 +17,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     {
         posCur = getAngle();
         stopMotor();
-        confMotor(20, 4);
+        confMotor(20, 2);
         RUN_STATE = RUN_TO_SWITCH;
     }
     pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
@@ -84,7 +84,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case RUN_TO_SWITCH:
         {
             digitalWrite(LED_Alarm, LOW);
-            confMotor(20, 3);
+            confMotor(20, 2);
             lcdPtr->setCursor(8,0);
             lcdPtr->print("TO SWITCH   ");
             if(PREV_STATE == SWEEP_OUT)
