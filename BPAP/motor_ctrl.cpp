@@ -116,3 +116,13 @@ int getSpeed()
 {
     return fStep*step_size;
 }
+
+float getMotorBPM()
+{
+    return bpm;
+}
+
+float getMotorIE()
+{
+    return ie;
+}

@@ -11,17 +11,17 @@ int getROM(){return total_ROM;}
 float getpressureThreshold(){return pressureThreshold;}
 float getStepSize(){return step_size;}
 
-int _bpm = 20;
-int _vol = 100;
-int _ie = 5;
+float _bpm = 20;
+float _vol = 1.0;
+float _ie = 5;
 int _assist = -5;
 int _alarm = 20;
 float _switch_to_bag = 45.0;
 float _bag_to_centre = total_ROM - _switch_to_bag;
 
-int getBPM(){return _bpm;}
-int getVOL(){return _vol;}
-int getIE(){return _ie;}
+float getBPM(){return _bpm;}
+float getVOL(){return _vol;}
+float getIE(){return _ie;}
 int getASIST(){return _assist;}
 int getALARM(){return _alarm;}
 float getSwitchToBag(){return _switch_to_bag;}

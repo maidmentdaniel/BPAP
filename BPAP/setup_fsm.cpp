@@ -34,15 +34,15 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       lcdPtr->setCursor(4,0);
       lcdPtr->print("  ");
       lcdPtr->setCursor(4,0);
-      lcdPtr->print(getBPM());
+      lcdPtr->print(round(getBPM()));
       lcdPtr->setCursor(11,0);
       lcdPtr->print("  ");
       lcdPtr->setCursor(11,0);
-      lcdPtr->print(getVOL());
+      lcdPtr->print(round(getVOL()));
       lcdPtr->setCursor(19,0);
       lcdPtr->print(" ");
       lcdPtr->setCursor(19,0);
-      lcdPtr->print(getIE());
+      lcdPtr->print(round(getIE()));
       //line 2
       lcdPtr->setCursor(7,1);
       lcdPtr->print("  ");

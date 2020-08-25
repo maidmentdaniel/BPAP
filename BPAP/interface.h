@@ -7,9 +7,9 @@ int getROM();
 float getpressureThreshold();
 float getStepSize();
 
-int getBPM();
-int getVOL();
-int getIE();
+float getBPM();
+float getVOL();
+float getIE();
 int getASIST();
 int getALARM();
 float getSwitchToBag();

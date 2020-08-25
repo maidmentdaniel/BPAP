@@ -11,6 +11,7 @@ void runMotor(float rotate);
 void stopMotor();
 bool checkMotorRunning();
 int getSpeed();
+float getMotorBPM();
 
 const int getAngle();
 
