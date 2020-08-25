@@ -59,7 +59,6 @@ void loop()
             {
                 MAIN_STATE = RUN;
                 delay(500);
-                // lcd.clear();
             }
             break;
         }

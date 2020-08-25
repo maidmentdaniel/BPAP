@@ -5,11 +5,12 @@
 #include "arduino.h"
 #include "interface.h"
 
-void confMotor(float bpm = 20, float ie = 3);
-void setMotor(float bpm = 20, float ie = 3);
+void confMotor(float bpm = 20.0, float ie = 3.0);
+void setMotor(float bpm = 20.0, float ie = 3.0);
 void runMotor(float rotate);
 void stopMotor();
 bool checkMotorRunning();
+int getSpeed();
 
 const int getAngle();
 

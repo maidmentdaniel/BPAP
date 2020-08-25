@@ -9,7 +9,18 @@ int ROM = 72;
 int N = 64;
 int direction = 1;
 
-void confMotor(float bpm = 20, float ie = 3)
+float bpm = 20;                     //beats per minute
+float ie = 3;                       //ie
+float bps = bpm/60;                 // beats per second
+float T = 1/bps;                    // period per beat
+float in_T = T/(ie+1);              // inhilation period
+float ex_T = (T*ie)/(ie+1);         // exhilation period
+float fStep = (ROM/in_T)/step_size; // step rate
+
+int ICR4_var = round((fck)/(N*fStep));
+int OCR4A_var = round(0.5*ICR4_var);
+
+void confMotor(float bpm, float ie)
 {
     // cli();
     TCNT4 = 0;            // clear timer counter 4, pg 154
@@ -28,20 +39,19 @@ void confMotor(float bpm = 20, float ie = 3)
     // sei();
 }
 
-void setMotor(float bpm = 20, float ie = 3)
+void setMotor(float bpm, float ie)
 {
     fck = getClockSpeed();
     step_size = getStepSize();
     ROM = getBagToCentre();
 
-    float bps = bpm/60;                 // beats per second
-    float T = 1/bps;                    // period per beat
-    float in_T = T/(ie+1);              // inhilation period
-    float ex_T = (T*ie)/(ie+1);         // exhilation period
-    float fStep = (ROM/in_T)/step_size; // step rate
-
-    int ICR4_var = round((fck)/(N*fStep));
-    int OCR4A_var = round(0.5*ICR4_var);
+    bps = bpm/60;                 // beats per second
+    T = 1/bps;                    // period per beat
+    in_T = T/(ie+1);              // inhilation period
+    ex_T = (T*ie)/(ie+1);         // exhilation period
+    fStep = (ROM/in_T)/step_size; // step rate
+    ICR4_var = round((fck)/(N*fStep));
+    OCR4A_var = round(0.5*ICR4_var);
 
     //Set frequency for an I:E ratio of 1:3 at 20BPM
     ICR4 = ICR4_var;
@@ -100,4 +110,9 @@ ISR(TIMER4_COMPA_vect)
 const int getAngle()
 {
     return direction*counter0*step_size;
+}
+
+int getSpeed()
+{
+    return fStep*step_size;
 }
