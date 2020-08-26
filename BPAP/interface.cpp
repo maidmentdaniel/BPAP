@@ -31,9 +31,9 @@ float getBagToCentre()
     return _bag_to_centre;
 }
 
-void setBPM(int bpm){_bpm = bpm;}
-void setVOL(int vol){_vol = vol;}
-void setIE(int ie){_ie = ie;}
+void setBPM(float bpm){_bpm = bpm;}
+void setVOL(float vol){_vol = vol;}
+void setIE(float ie){_ie = ie;}
 void setASIST(int assist){_assist = assist;}
 void setALARM(int alarm){_alarm = alarm;}
 void setSwitchToBag(float switch_to_bag){_switch_to_bag = switch_to_bag;}

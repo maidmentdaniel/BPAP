@@ -15,9 +15,9 @@ int getALARM();
 float getSwitchToBag();
 float getBagToCentre();
 
-void setBPM(int bpm);
-void setVOL(int vol);
-void setIE(int ie);
+void setBPM(float bpm);
+void setVOL(float vol);
+void setIE(float ie);
 void setASIST(int assist);
 void setALARM(int alarm);
 void setSwitchToBag(float switch_to_bag);

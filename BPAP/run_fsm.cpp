@@ -7,8 +7,6 @@ RUN_enum PREV_STATE = RUN_STATE;
 float pressCur = 0.00;
 float pressThresh = -2.00;
 float posCur = 0.00;
-// float speedCur = 0.00;
-
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
@@ -45,7 +43,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case WAIT_INHALE:
         {
             digitalWrite(LED_Alarm, LOW);
-            delay(1000);
             lcdPtr->setCursor(8,0);
             lcdPtr->print("AWAIT INHALE");
             if(pressCur < pressThresh)

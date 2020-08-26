@@ -5,7 +5,7 @@ SETUP_enum SETUP_STATE = SET_DISPLAY;
 bool setup_FSM( LiquidCrystal * lcdPtr)
 {
   setBPM(map(analogRead(ReadBPM_Val), 0, 1023, 40, -1));
-  setVOL(map(analogRead(ReadTV_Val), 0, 1023, 99, -1));
+  setVOL((map(analogRead(ReadTV_Val), 0, 1023, 99, 0))/100);
   setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
   setASIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
   setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
@@ -38,7 +38,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       lcdPtr->setCursor(11,0);
       lcdPtr->print("  ");
       lcdPtr->setCursor(11,0);
-      lcdPtr->print(round(getVOL()));
+      lcdPtr->print(round((getVOL()*100)));
       lcdPtr->setCursor(19,0);
       lcdPtr->print(" ");
       lcdPtr->setCursor(19,0);
@@ -55,7 +55,6 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       lcdPtr->print(getALARM());
       if(digitalRead(SetButton))
       {
-        delay(500);
         lcdPtr->clear();
         SETUP_STATE = SET_DISPLAY;
         return true;

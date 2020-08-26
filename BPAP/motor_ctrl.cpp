@@ -22,10 +22,10 @@ int OCR4A_var = round(0.5*ICR4_var);
 
 void confMotor(float bpm, float ie)
 {
-    // cli();
-    TCNT4 = 0;            // clear timer counter 4, pg 154
-    TCCR4A = 0;           // clear timer 4 control register A, pg 154
-    TCCR4B = 0;           // clear timer 4 control register B, pg 154
+    TIMSK4 = 0;                 // disable  Timer/Counter 4 Interrupt Mask Register
+    TIFR4 = 0;                  //clear timer 4 counter interrupt flag register
+    TCNT4 = 0;                  // clear timer counter 4, pg 154
+    TCCR4B = 0;                 // clear timer 4 control register B, pg 154
 
     // Configure timer 4 control register A,
     // Clear OC4A on compare match, set OC4A at BOTTOM.
@@ -36,7 +36,6 @@ void confMotor(float bpm, float ie)
     pinMode(dirPIN, OUTPUT);    //Direction PIN
 
     setMotor(bpm, ie);
-    // sei();
 }
 
 void setMotor(float bpm, float ie)
@@ -57,16 +56,20 @@ void setMotor(float bpm, float ie)
     ICR4 = ICR4_var;
     //Duty cycle is 50%, hence OCR4B = 0.5*ICR4
     OCR4A = OCR4A_var;
+
 }
 
  void runMotor(float rotate)
 {
-    cli();
     counter0 = 0;
     counter1 = round(abs(rotate)/step_size);
 
-    TIMSK4 |= (1 << OCIE4A);
-    sei();
+    //OCIE4A: Timer/Countern, Output Compare A Match Interrupt Enable
+    //When this bit is written to one, and the I-flag in the Status Register is
+    //set (interrupts globally enabled), the Timer/Countern Output Compare A
+    // Match interrupt is enabled. The corresponding Interrupt Vector
+    //(see “Inter-rupts” on page 101) is executed when the OCFnA Flag,
+    //located in TIFRn, is set.
     if(rotate<0)
     {
         digitalWrite(dirPIN, HIGH);
@@ -74,16 +77,17 @@ void setMotor(float bpm, float ie)
     }
     else
     {
-      digitalWrite(dirPIN, LOW);
-      direction = 1;
+        digitalWrite(dirPIN, LOW);
+        direction = 1;
     }
+    TIMSK4 |= (1 << OCIE4A);
     TCCR4B = B00011011;
 }
 
 void stopMotor()
 {
-    TCCR4B = 0;
     TIMSK4 |= (0 << OCIE4A);
+    TCCR4B = 0;
 }
 
 bool checkMotorRunning()
