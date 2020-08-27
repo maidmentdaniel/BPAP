@@ -64,12 +64,7 @@ void setMotor(float bpm, float ie)
     counter0 = 0;
     counter1 = round(abs(rotate)/step_size);
 
-    //OCIE4A: Timer/Countern, Output Compare A Match Interrupt Enable
-    //When this bit is written to one, and the I-flag in the Status Register is
-    //set (interrupts globally enabled), the Timer/Countern Output Compare A
-    // Match interrupt is enabled. The corresponding Interrupt Vector
-    //(see “Inter-rupts” on page 101) is executed when the OCFnA Flag,
-    //located in TIFRn, is set.
+
     if(rotate<0)
     {
         digitalWrite(dirPIN, HIGH);
