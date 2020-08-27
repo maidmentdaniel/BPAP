@@ -22,14 +22,16 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->setCursor(0,1);
             lcdPtr->print("TO_SWITCH");
             // Run ccw
-            confMotor(40, 2);
+            confMotor(40, 2, true);
             runMotor(getROM());// rotate through range assuming starting at bag.
             break;
         }
         case TO_SWITCH:
         {
             CUR_CALIBRATE_STATE = TO_SWITCH;
-            if(!digitalRead(laserPIN) || !checkMotorRunning())
+            if( !digitalRead(laserPIN)
+                || !checkMotorRunning()
+                ||  digitalRead(SetButton))
             {
                 stopMotor();
                 CUR_CALIBRATE_STATE = SET_LIMIT_POSITION;
@@ -51,8 +53,8 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print("TO_BAG");
 
             CUR_CALIBRATE_STATE = TO_BAG;
-            confMotor(40, 2);
-            runMotor(-72);//rotate gear cw
+            confMotor(40, 2, true);
+            runMotor(-1*getROM());//rotate gear cw
             break;
         }
         case TO_BAG:
@@ -81,7 +83,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->setCursor(0,3);
             lcdPtr->print("Homing             ");
             CUR_CALIBRATE_STATE = HOME;
-            confMotor(20, 2);
+            confMotor(20, 2, true);
             break;
         }
         case HOME:

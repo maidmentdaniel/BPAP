@@ -5,11 +5,14 @@
 #include "arduino.h"
 #include "interface.h"
 
-void confMotor(float bpm = 20, float ie = 3);
-void setMotor(float bpm = 20, float ie = 3);
+void confMotor(float bpm = 10.0, float ie = 3.0, bool debug = false);
+void setMotor(float bpm = 10.0, float ie = 3.0, bool debug = false);
 void runMotor(float rotate);
 void stopMotor();
 bool checkMotorRunning();
+int getSpeed();
+float getMotorBPM();
+float getMotorIE();
 
 const int getAngle();
 
@@ -28,5 +31,21 @@ const int getAngle();
 //  7       |6      |5      |4      |3      |2    |1    |0
 //  ICNC4   |ICES4  |RESV   |WGM43  |WGM42  |CS42 |CS41 |CS40
 // Fast PWM mode // Fast PWM | ICR4 | BOTTOM  | TOP
+//CS4 2:0: Clock Select
+//CS4 2:0: 000      -->No clock source. (Timer/Counter stopped)
+//CS4 2:0: 011      -->clk/64
 
+//WGM4 3:0: Waveform Generation Mode
+//WGM4 3:0: 1110    --> Timer/CounterMode of Operation:Fast PWM
+//                  --> TOP:ICRnBOTTOM
+//                  --> Update of OCRnx at:BOTTOM
+//                  --> TOVn Flag Set on at:TOP
+
+
+//OCIE4A: Timer/Countern, Output Compare A Match Interrupt Enable
+//When this bit is written to one, and the I-flag in the Status Register is
+//set (interrupts globally enabled), the Timer/Countern Output Compare A
+// Match interrupt is enabled. The corresponding Interrupt Vector
+//(see “Inter-rupts” on page 101) is executed when the OCFnA Flag,
+//located in TIFRn, is set.
 #endif

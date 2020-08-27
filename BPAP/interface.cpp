@@ -13,7 +13,7 @@ float getStepSize(){return step_size;}
 
 float _bpm = 20;
 float _vol = 1.0;
-float _ie = 5;
+float _ie = 2;
 int _assist = -5;
 int _alarm = 20;
 float _switch_to_bag = 45.0;

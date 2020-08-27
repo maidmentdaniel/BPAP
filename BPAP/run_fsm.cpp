@@ -15,28 +15,28 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     {
         posCur = getAngle();
         stopMotor();
-        confMotor(10, 2);
+        confMotor(10, 2, true);
         RUN_STATE = RUN_TO_SWITCH;
     }
     pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
     posCur = getAngle();
-    Serial.print("Speed: ");
-    Serial.print(getSpeed());
-    Serial.print("\t| Angle: ");
-    Serial.print(getAngle());
-    Serial.print("\t| pressure ");
-    Serial.print(pressCur);
-    Serial.print("\t| MotorIE 1:");
-    Serial.print(getMotorIE());
-    Serial.print("\t| Motor BPM ");
-    Serial.println(getMotorBPM());
+    // Serial.print("Speed: ");
+    // Serial.print(getSpeed());
+    // Serial.print("\t| Angle: ");
+    // Serial.print(getAngle());
+    // Serial.print("\t| pressure ");
+    // Serial.print(pressCur);
+    // Serial.print("\t| MotorIE 1:");
+    // Serial.print(getMotorIE());
+    // Serial.print("\t| Motor BPM ");
+    // Serial.println(getMotorBPM());
     switch(RUN_STATE)
     {
         case RUN_SETUP:
         {
             lcdPtr->clear();
             lcdPtr->print("Running RUN SETUP");
-            confMotor(getBPM(), getIE());
+            confMotor(getBPM(), getIE(), true);
             RUN_STATE = WAIT_INHALE;
             break;
         }
@@ -57,6 +57,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print("SWEEP IN    ");
             if(!checkMotorRunning())
             {
+                confMotor(getBPM(), getIE(), true);
                 runMotor(getBagToCentre());
                 RUN_STATE = SWEEP_OUT;
             }
@@ -74,33 +75,29 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case RUN_TO_SWITCH:
         {
-            confMotor(10, 2);
+            confMotor(10, 2, true);
             lcdPtr->setCursor(8,0);
             lcdPtr->print("TO SWITCH   ");
+            float theta = 0;
             if(PREV_STATE == SWEEP_OUT)
             {
-                Serial.println("SWEEP_OUT");
-                Serial.println(getROM()-posCur);
-                runMotor(getROM()-posCur);
+                theta = getROM()-posCur;
             }
             else if(PREV_STATE == SWEEP_IN)
             {
-                Serial.println("SWEEP_IN");
-                Serial.println(-1*getSwitchToBag()+posCur);
-                runMotor((-1*getSwitchToBag())+posCur);
+                theta = (-1*getSwitchToBag())+posCur;
             }
             else if(PREV_STATE == WAIT_INHALE)
             {
-                Serial.println("WAIT_INHALE");
-                Serial.println(-1*getSwitchToBag());
-                runMotor(-1*getSwitchToBag());
+                theta = -1*getSwitchToBag();
             }
             else if(PREV_STATE == RUN_SETUP)
             {
-                Serial.println("RUN_SETUP");
-                Serial.println(-1*getSwitchToBag());
-                runMotor(-1*getSwitchToBag());
+                theta = -1*getSwitchToBag();
             }
+            Serial.println(PREV_STATE);
+            Serial.println(theta);
+            runMotor(theta);
             RUN_STATE = DONE;
             delay(5000);
             break;

@@ -9,12 +9,12 @@ volatile int ROM = 72;
 volatile int N = 64;
 volatile int direction = 1;
 
-volatile float _bpm = 20;                     //beats per minute
-volatile float _ie = 3;                       //ie
-volatile float bps = _bpm/60;                 // beats per second
+volatile float BPM = 20;                         //beats per minute
+volatile float IE = 3;                       //ie
+volatile float bps = BPM/60;                 // beats per second
 volatile float T = 1/bps;                    // period per beat
-volatile float in_T = T/(_ie+1);              // inhilation period
-volatile float ex_T = (T*_ie)/(_ie+1);         // exhilation period
+volatile float in_T = T/(IE+1);              // inhilation period
+volatile float ex_T = (T*IE)/(IE+1);         // exhilation period
 volatile float fStep = (ROM/in_T)/step_size; // step rate
 
 volatile int ICR4_var = round((fck)/(N*fStep));
@@ -43,12 +43,12 @@ void setMotor(float bpm, float ie, bool debug)
     fck = getClockSpeed();
     step_size = getStepSize();
     ROM = getBagToCentre();
-    _bpm = bpm;
-    _ie = ie;
-    bps = _bpm/60;                 // beats per second
+    BPM = bpm;
+    IE = ie;
+    bps = BPM/60;                 // beats per second
     T = 1/bps;                    // period per beat
-    in_T = T/(ie+1);              // inhilation period
-    ex_T = (T*_ie)/(_ie+1);         // exhilation period
+    in_T = T/(IE+1);              // inhilation period
+    ex_T = (T*IE)/(IE+1);         // exhilation period
     fStep = (ROM/in_T)/step_size; // step rate
     ICR4_var = round((fck)/(N*fStep));
     OCR4A_var = round(0.5*ICR4_var);
@@ -60,16 +60,13 @@ void setMotor(float bpm, float ie, bool debug)
 
     if(debug)
     {
-        Serial.print("fck: ");
-        Serial.print(fck);
-        Serial.print("\t| step_size: ");
-        Serial.print(fck);
+        Serial.println("DEBUG Motor:");
         Serial.print("\t| ROM: ");
         Serial.print(ROM);
-        Serial.print("\t| _bpm: ");
-        Serial.print(_bpm);
-        Serial.print("\t| _ie: ");
-        Serial.print(_ie);
+        Serial.print("\t| BPM: ");
+        Serial.print(BPM);
+        Serial.print("\t| IE: ");
+        Serial.print(IE);
         Serial.print("\t| bps: ");
         Serial.print(bps);
         Serial.print("\t| T: ");
@@ -145,10 +142,10 @@ int getSpeed()
 
 float getMotorBPM()
 {
-    return _bpm;
+    return BPM;
 }
 
 float getMotorIE()
 {
-    return _ie;
+    return IE;
 }
