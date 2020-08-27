@@ -77,6 +77,8 @@ void loop()
         {
             lcd.setCursor(0, 0);
             lcd.print("Main: STOP");
+            lcd.setCursor(0, 1);
+            lcd.print("SET to restart and recalibrate");
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = START;

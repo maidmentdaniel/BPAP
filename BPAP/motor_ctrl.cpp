@@ -1,26 +1,26 @@
 #include "motor_ctrl.h"
 
-int counter0 = 0;
-int counter1 = 0;
+volatile int counter0 = 0;
+volatile int counter1 = 0;
 
-long int fck = 0;
-float step_size = 0;
-int ROM = 72;
-int N = 64;
-int direction = 1;
+volatile long int fck = 0;
+volatile float step_size = 0;
+volatile int ROM = 72;
+volatile int N = 64;
+volatile int direction = 1;
 
-float bpm = 20;                     //beats per minute
-float ie = 3;                       //ie
-float bps = bpm/60;                 // beats per second
-float T = 1/bps;                    // period per beat
-float in_T = T/(ie+1);              // inhilation period
-float ex_T = (T*ie)/(ie+1);         // exhilation period
-float fStep = (ROM/in_T)/step_size; // step rate
+volatile float _bpm = 20;                     //beats per minute
+volatile float _ie = 3;                       //ie
+volatile float bps = _bpm/60;                 // beats per second
+volatile float T = 1/bps;                    // period per beat
+volatile float in_T = T/(_ie+1);              // inhilation period
+volatile float ex_T = (T*_ie)/(_ie+1);         // exhilation period
+volatile float fStep = (ROM/in_T)/step_size; // step rate
 
-int ICR4_var = round((fck)/(N*fStep));
-int OCR4A_var = round(0.5*ICR4_var);
+volatile int ICR4_var = round((fck)/(N*fStep));
+volatile int OCR4A_var = round(0.5*ICR4_var);
 
-void confMotor(float bpm, float ie)
+void confMotor(float bpm, float ie, bool debug)
 {
     TIMSK4 = 0;                 // disable  Timer/Counter 4 Interrupt Mask Register
     TIFR4 = 0;                  //clear timer 4 counter interrupt flag register
@@ -35,19 +35,20 @@ void confMotor(float bpm, float ie)
     pinMode(drivePIN, OUTPUT);  //PWM PIN
     pinMode(dirPIN, OUTPUT);    //Direction PIN
 
-    setMotor(bpm, ie);
+    setMotor(bpm, ie, debug);
 }
 
-void setMotor(float bpm, float ie)
+void setMotor(float bpm, float ie, bool debug)
 {
     fck = getClockSpeed();
     step_size = getStepSize();
     ROM = getBagToCentre();
-
-    bps = bpm/60;                 // beats per second
+    _bpm = bpm;
+    _ie = ie;
+    bps = _bpm/60;                 // beats per second
     T = 1/bps;                    // period per beat
     in_T = T/(ie+1);              // inhilation period
-    ex_T = (T*ie)/(ie+1);         // exhilation period
+    ex_T = (T*_ie)/(_ie+1);         // exhilation period
     fStep = (ROM/in_T)/step_size; // step rate
     ICR4_var = round((fck)/(N*fStep));
     OCR4A_var = round(0.5*ICR4_var);
@@ -56,6 +57,32 @@ void setMotor(float bpm, float ie)
     ICR4 = ICR4_var;
     //Duty cycle is 50%, hence OCR4B = 0.5*ICR4
     OCR4A = OCR4A_var;
+
+    if(debug)
+    {
+        Serial.print("fck: ");
+        Serial.print(fck);
+        Serial.print("\t| step_size: ");
+        Serial.print(fck);
+        Serial.print("\t| ROM: ");
+        Serial.print(ROM);
+        Serial.print("\t| _bpm: ");
+        Serial.print(_bpm);
+        Serial.print("\t| _ie: ");
+        Serial.print(_ie);
+        Serial.print("\t| bps: ");
+        Serial.print(bps);
+        Serial.print("\t| T: ");
+        Serial.print(T);
+        Serial.print("\t| in_T: ");
+        Serial.print(in_T);
+        Serial.print("\t| fStep: ");
+        Serial.print(fStep);
+        Serial.print("\t| ICR4_var: ");
+        Serial.print(ICR4_var);
+        Serial.print("\t| OCR4A_var: ");
+        Serial.println(OCR4A_var);
+    }
 
 }
 
@@ -118,10 +145,10 @@ int getSpeed()
 
 float getMotorBPM()
 {
-    return bpm;
+    return _bpm;
 }
 
 float getMotorIE()
 {
-    return ie;
+    return _ie;
 }

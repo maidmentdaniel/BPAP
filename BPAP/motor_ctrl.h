@@ -5,8 +5,8 @@
 #include "arduino.h"
 #include "interface.h"
 
-void confMotor(float bpm = 10.0, float ie = 3.0);
-void setMotor(float bpm = 10.0, float ie = 3.0);
+void confMotor(float bpm = 10.0, float ie = 3.0, bool debug = false);
+void setMotor(float bpm = 10.0, float ie = 3.0, bool debug = false);
 void runMotor(float rotate);
 void stopMotor();
 bool checkMotorRunning();

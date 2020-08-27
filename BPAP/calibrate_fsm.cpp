@@ -1,7 +1,8 @@
 #include "calibrate_fsm.h"
 
 //VARIABLES
-calib_enum CALIBRATE_STATE = BEGIN_CALIBRATE;
+calib_enum CUR_CALIBRATE_STATE = BEGIN_CALIBRATE;
+calib_enum PREV_CALIBRATE_STATE = CUR_CALIBRATE_STATE;
 
 float pressurePrev = 0;
 float pressureCur = 0;
@@ -9,14 +10,15 @@ float homeInc = 0.09;
 
 bool calibrate_FSM(LiquidCrystal * lcdPtr)
 {
+    PREV_CALIBRATE_STATE = CUR_CALIBRATE_STATE;
     pressureCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
-    switch(CALIBRATE_STATE)
+    switch(CUR_CALIBRATE_STATE)
     {
         case BEGIN_CALIBRATE:
         {
             lcdPtr->clear();
             lcdPtr->print("Calibrating:");
-            CALIBRATE_STATE = TO_SWITCH;
+            CUR_CALIBRATE_STATE = TO_SWITCH;
             lcdPtr->setCursor(0,1);
             lcdPtr->print("TO_SWITCH");
             // Run ccw
@@ -26,11 +28,11 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         }
         case TO_SWITCH:
         {
-            CALIBRATE_STATE = TO_SWITCH;
+            CUR_CALIBRATE_STATE = TO_SWITCH;
             if(!digitalRead(laserPIN) || !checkMotorRunning())
             {
                 stopMotor();
-                CALIBRATE_STATE = SET_LIMIT_POSITION;
+                CUR_CALIBRATE_STATE = SET_LIMIT_POSITION;
             }
             break;
         }
@@ -38,7 +40,6 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         {
             lcdPtr->setCursor(0,1);
             lcdPtr->print("SET_LIMIT_POSITION");
-            sei();
             delay(1000);
             pressurePrev = 0.2;
             lcdPtr->setCursor(15,3);
@@ -49,19 +50,19 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->setCursor(0,1);
             lcdPtr->print("TO_BAG");
 
-            CALIBRATE_STATE = TO_BAG;
+            CUR_CALIBRATE_STATE = TO_BAG;
             confMotor(40, 2);
             runMotor(-72);//rotate gear cw
             break;
         }
         case TO_BAG:
         {
-            CALIBRATE_STATE = TO_BAG;
+            CUR_CALIBRATE_STATE = TO_BAG;
             if(pressureCur >= pressurePrev || !checkMotorRunning())
             {
                 stopMotor();
                 setSwitchToBag(getAngle());
-                CALIBRATE_STATE = HOME_SETUP;
+                CUR_CALIBRATE_STATE = HOME_SETUP;
             }
             lcdPtr->setCursor(0,3);
             lcdPtr->print("     ");
@@ -79,29 +80,29 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print("SET to continue");
             lcdPtr->setCursor(0,3);
             lcdPtr->print("Homing             ");
-            CALIBRATE_STATE = HOME;
+            CUR_CALIBRATE_STATE = HOME;
             confMotor(20, 2);
             break;
         }
         case HOME:
         {
             lcdPtr->setCursor(7,3);
-            CALIBRATE_STATE = HOME;
+            CUR_CALIBRATE_STATE = HOME;
             if(digitalRead(Home_In))
             {
                 lcdPtr->print("in. ");
                 runMotor(-1*homeInc);//rotate gear ccw
-                CALIBRATE_STATE = HOME_IN;
+                CUR_CALIBRATE_STATE = HOME_IN;
             }
             else if(digitalRead(Home_Out))
             {
                 lcdPtr->print("out.");
                 runMotor(homeInc);//rotate gear cw
-                CALIBRATE_STATE = HOME_OUT;
+                CUR_CALIBRATE_STATE = HOME_OUT;
             }
             else if(digitalRead(SetButton))
             {
-            CALIBRATE_STATE = FINISH;
+            CUR_CALIBRATE_STATE = FINISH;
             }
             break;
         }
@@ -109,12 +110,12 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         {
             if(checkMotorRunning())
             {
-                CALIBRATE_STATE = HOME_IN;
+                CUR_CALIBRATE_STATE = HOME_IN;
             }
             else
             {
                 addToSwitchToBag(-1*homeInc);
-                CALIBRATE_STATE = HOME;
+                CUR_CALIBRATE_STATE = HOME;
             }
             break;
         }
@@ -122,12 +123,12 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         {
             if(checkMotorRunning())
             {
-                CALIBRATE_STATE = HOME_OUT;
+                CUR_CALIBRATE_STATE = HOME_OUT;
             }
             else
             {
                 addToSwitchToBag(homeInc);
-                CALIBRATE_STATE = HOME;
+                CUR_CALIBRATE_STATE = HOME;
             }
             break;
         }
@@ -136,9 +137,9 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->clear();
             lcdPtr->setCursor(0,1);
             lcdPtr->print("Finished Calibrating");
-            delay(500);
+            delay(2000);
             lcdPtr->clear();
-            CALIBRATE_STATE = BEGIN_CALIBRATE;
+            CUR_CALIBRATE_STATE = BEGIN_CALIBRATE;
             return true;
             break;
         }
