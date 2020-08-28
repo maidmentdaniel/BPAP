@@ -24,4 +24,11 @@ void setSwitchToBag(float switch_to_bag);
 void setBagToCentre(float bag_to_centre);
 void addToSwitchToBag(float delta);
 
+float calcStepRate(bool inhale = true, float sweep = ROM);
+
+int getSpeed();
+float getMotorBPM();
+float getMotorIE();
+void motorDebug();
+
 #endif

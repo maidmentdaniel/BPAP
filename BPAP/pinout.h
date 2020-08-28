@@ -1,8 +1,13 @@
 #ifndef PINOUT_H
 #define PINOUT_H
 
+#define fck 16000000        // [Hz] clock speed
+#define N 64                // clock divider for timer4
+#define ROM 72              // [deg] Range of Motion from switch to center for drive gear
+#define step_size 0.09      // [deg/step] stepper motor step size
+
 //Buttons and switches - External 10kOhm Pulls low --> Switch High
-#define Home_In 25		//  
+#define Home_In 25		//
 #define Home_Out 27		//
 #define ToggleSwitch 3	//
 #define SetButton 5	//
