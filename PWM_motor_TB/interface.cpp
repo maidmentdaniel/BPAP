@@ -1,13 +1,11 @@
 //global variables
 const long int fck = 16000000;  //clock frequency
 const int N = 64;               //clock divider
-const int ROM = 72;          //degrees
 const float step_size = 0.09;   //deg/step
 const float pressureThreshold = 0.5;
 
 long int getClockSpeed(){return fck;}
 int getClockDiv(){return N;}
-int getROM(){return ROM;}
 float getpressureThreshold(){return pressureThreshold;}
 float getStepSize(){return step_size;}
 

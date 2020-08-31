@@ -6,7 +6,6 @@
 
 long int getClockSpeed();
 int getClockDiv();
-int getROM();
 float getpressureThreshold();
 float getStepSize();
 

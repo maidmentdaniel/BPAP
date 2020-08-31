@@ -82,7 +82,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             float theta = 0;
             if(PREV_STATE == SWEEP_OUT)
             {
-                theta = getROM()-_posCur;
+                theta = ROM-_posCur;
             }
             else if(PREV_STATE == SWEEP_IN)
             {

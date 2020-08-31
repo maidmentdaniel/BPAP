@@ -24,7 +24,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print("TO_SWITCH");
             // Run ccw
             confMotor(calib_fstep);
-            runMotor(getROM());// rotate through range assuming starting at bag.
+            runMotor(ROM);// rotate through range assuming starting at bag.
             break;
         }
         case TO_SWITCH:
@@ -55,7 +55,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
 
             CUR_CALIBRATE_STATE = TO_BAG;
             confMotor(calib_fstep);
-            runMotor(-1*getROM()/2);//rotate gear cw
+            runMotor(-1*ROM/2);//rotate gear cw
             break;
         }
         case TO_BAG:
