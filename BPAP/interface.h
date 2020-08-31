@@ -1,6 +1,9 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#include "Arduino.h"
+#include "pinout.h"
+
 long int getClockSpeed();
 int getClockDiv();
 int getROM();
@@ -30,5 +33,6 @@ int getSpeed();
 float getMotorBPM();
 float getMotorIE();
 void motorDebug();
+const int getSweep();
 
 #endif

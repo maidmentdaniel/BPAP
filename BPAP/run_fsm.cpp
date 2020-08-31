@@ -4,28 +4,29 @@
 RUN_enum RUN_STATE = RUN_SETUP;
 RUN_enum PREV_STATE = RUN_STATE;
 
-float pressCur = 0.00;
-float pressThresh = -2.00;
-float posCur = 0.00;
+static float _pressCur = 0.00;
+static float _pressThresh = -2.00;
+static float _posCur = 0.00;
+static float _run_speed = 1600;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
     PREV_STATE = RUN_STATE;
     if(digitalRead(SetButton))
     {
-        posCur = getAngle();
+        _posCur = getAngle();
         stopMotor();
-        confMotor(10, 2);
+        confMotor(_run_speed);
         RUN_STATE = RUN_TO_SWITCH;
     }
-    pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
-    posCur = getAngle();
+    _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
+    _posCur = getAngle();
     // Serial.print("Speed: ");
     // Serial.print(getSpeed());
     // Serial.print("\t| Angle: ");
     // Serial.print(getAngle());
     // Serial.print("\t| pressure ");
-    // Serial.print(pressCur);
+    // Serial.print(_pressCur);
     // Serial.print("\t| MotorIE 1:");
     // Serial.print(getMotorIE());
     // Serial.print("\t| Motor BPM ");
@@ -36,7 +37,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         {
             lcdPtr->clear();
             lcdPtr->print("Running RUN SETUP");
-            confMotor(getBPM(), getIE());
+            confMotor(calcStepRate(getBagToCentre(), true));
             RUN_STATE = WAIT_INHALE;
             break;
         }
@@ -44,7 +45,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         {
             lcdPtr->setCursor(8,0);
             lcdPtr->print("AWAIT INHALE");
-            if(pressCur < pressThresh)
+            if(_pressCur < _pressThresh)
             {
                 runMotor(-1*getBagToCentre());
                 RUN_STATE = SWEEP_IN;
@@ -57,7 +58,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print("SWEEP IN    ");
             if(!checkMotorRunning())
             {
-                confMotor(getBPM(), getIE());
+                confMotor(calcStepRate(getBagToCentre(), false));
                 runMotor(getBagToCentre());
                 RUN_STATE = SWEEP_OUT;
             }
@@ -75,17 +76,17 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case RUN_TO_SWITCH:
         {
-            confMotor(10, 2);
+            confMotor(_run_speed);
             lcdPtr->setCursor(8,0);
             lcdPtr->print("TO SWITCH   ");
             float theta = 0;
             if(PREV_STATE == SWEEP_OUT)
             {
-                theta = getROM()-posCur;
+                theta = getROM()-_posCur;
             }
             else if(PREV_STATE == SWEEP_IN)
             {
-                theta = (-1*getSwitchToBag())+posCur;
+                theta = (-1*getSwitchToBag())+_posCur;
             }
             else if(PREV_STATE == WAIT_INHALE)
             {

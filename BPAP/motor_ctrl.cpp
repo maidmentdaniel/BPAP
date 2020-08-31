@@ -1,11 +1,14 @@
 #include "motor_ctrl.h"
 
-volatile int counter0 = 0;
-volatile int counter1 = 0;
-volatile int direction = 1;
+static int _counter0;
+static int _counter1;
+static int _direction;
+static float _fstep;
+static float _sweep;
 
-void confMotor(float fStep)
+void confMotor(float fstep)
 {
+    _fstep = fstep;
     TIMSK4 = 0;                 // disable  Timer/Counter 4 Interrupt Mask Register
     TIFR4 = 0;                  //clear timer 4 counter interrupt flag register
     TCNT4 = 0;                  // clear timer counter 4, pg 154
@@ -19,34 +22,36 @@ void confMotor(float fStep)
     pinMode(drivePIN, OUTPUT);  //PWM PIN
     pinMode(dirPIN, OUTPUT);    //Direction PIN
 
-    setMotor(fStep);
+    setMotor(_fstep);
 }
 
-void setMotor(float fStep)
+void setMotor(float fstep)
 {
-    ICR4_var = round((fck)/(N*fStep));
-    OCR4A_var = round(0.5*ICR4_var);
+    _fstep = fstep;
+    // ICR4_var = round((fck)/(N*fStep));
+    // OCR4A_var = round(0.5*ICR4_var);
     //Set frequency for an I:E ratio of 1:3 at 20BPM
-    ICR4 = ICR4_var;
+    ICR4 = round((fck)/(N*_fstep));
     //Duty cycle is 50%, hence OCR4B = 0.5*ICR4
-    OCR4A = OCR4A_var;
+    OCR4A = round(0.5*ICR4);
 
 }
 
  void runMotor(float sweep)
 {
-    counter0 = 0;
-    counter1 = round(abs(sweep)/step_size);
+    _sweep = sweep;
+    _counter0 = 0;
+    _counter1 = round(abs(_sweep)/step_size);
 
-    if(sweep<0)
+    if(_sweep<0)
     {
         digitalWrite(dirPIN, HIGH);
-        direction = -1;
+        _direction = -1;
     }
     else
     {
         digitalWrite(dirPIN, LOW);
-        direction = 1;
+        _direction = 1;
     }
     TIMSK4 |= (1 << OCIE4A);
     TCCR4B = B00011011;
@@ -61,7 +66,7 @@ void stopMotor()
 
 bool checkMotorRunning()
 {
-    if(counter0 < counter1)
+    if(_counter0 < _counter1)
     {
         return true;
     }
@@ -73,8 +78,8 @@ bool checkMotorRunning()
 
 ISR(TIMER4_COMPA_vect)
 {
-  counter0 += 1;
-  if(counter0 >= counter1)
+  _counter0 += 1;
+  if(_counter0 >= _counter1)
   {
     stopMotor();
   }
@@ -82,12 +87,7 @@ ISR(TIMER4_COMPA_vect)
 
 const int getAngle()
 {
-    return direction*counter0*step_size;
-}
-
-const int getSweep()
-{
-    return sweep;
+    return _direction*_counter0*step_size;
 }
 
 void motorDebug()
@@ -96,7 +96,7 @@ void motorDebug()
     Serial.print("\t| ROM: ");
     Serial.print(ROM);
     Serial.print("\t| fStep: ");
-    Serial.print(fStep);
+    Serial.print(_fstep);
     Serial.print("\t| ICR4: ");
     Serial.println(ICR4);
 }

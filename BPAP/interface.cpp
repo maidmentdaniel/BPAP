@@ -1,26 +1,31 @@
+#include "interface.h"
+
 //global variables
 const float pressureThreshold = 0.5;
 
+static float   _bpm = 20;
+static float   _vol = 1.0;
+static float   _ie = 2;
+static int     _assist = -5;
+static int     _alarm = 20;
+static float   _switch_to_bag = 45.0;
+static float   _bag_to_centre = ROM - _switch_to_bag;
+static float   _sweep = ROM;
+static float   _fstep = 0.0;
+
+static float _bps = _bpm/60;                      // beats per second [Hz]
+static float _T = 1/_bps;                          // period per beat [s]
+static float _in_T = _T/(_ie+1);                   // inhilation period [s]
+static float _ex_T = (_T*_ie)/(_ie+1);   // exhilation period [s]
+
 float getpressureThreshold(){return pressureThreshold;}
 float getStepSize(){return step_size;}
-
-float   _bpm = 20;
-float   _vol = 1.0;
-float   _ie = 2;
-int     _assist = -5;
-int     _alarm = 20;
-float   _switch_to_bag = 45.0;
-float   _bag_to_centre = ROM - _switch_to_bag;
-float   _sweep = ROM;
-float   _fStep = 0.0;
-
 float   getBPM(){return _bpm;}
 float   getVOL(){return _vol;}
 float   getIE(){return _ie;}
 int     getASIST(){return _assist;}
 int     getALARM(){return _alarm;}
 float   getSwitchToBag(){return _switch_to_bag;}
-
 float   getBagToCentre()
 {
     _bag_to_centre = ROM - _switch_to_bag;
@@ -38,26 +43,26 @@ void addToSwitchToBag(float delta){_switch_to_bag += delta;}
 
 float calcStepRate(bool inhale, float sweep)
 {
-    bps = _bpm/60;                       // beats per second [Hz]
-    T = 1/bps;                          // period per beat [s]
-    in_T = T/(_ie+1);                    // inhilation period [s]
-    ex_T = (T*_ie)/(_ie+1);               // exhilation period [s]
+    _bps = _bpm/60;                      // beats per second [Hz]
+    _T = 1/_bps;                          // period per beat [s]
+    _in_T = _T/(_ie+1);                   // inhilation period [s]
+    _ex_T = (_T*_ie)/(_ie+1);   // exhilation period [s]
 
-    if(inhale):
+    if(inhale)
     {
-        fStep = (sweep/in_T)/step_size;       // step rate
+        _fstep = (sweep/_in_T)/step_size;       // step rate
     }
     else
     {
-        fStep = (sweep/ex_T)/step_size;       // step rate
+        _fstep = (sweep/_ex_T)/step_size;       // step rate
     }
 
-    return fStep;
+    return _fstep;
 }
 
 int getSpeed()
 {
-    return fStep*step_size;
+    return _fstep*step_size;
 }
 
 float getMotorBPM()
@@ -68,4 +73,9 @@ float getMotorBPM()
 float getMotorIE()
 {
     return _ie;
+}
+
+const int getSweep()
+{
+    return _sweep;
 }

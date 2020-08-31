@@ -7,6 +7,7 @@ calib_enum PREV_CALIBRATE_STATE = CUR_CALIBRATE_STATE;
 float pressurePrev = 0;
 float pressureCur = 0;
 float homeInc = 0.09;
+float calib_fstep = 1600;
 
 bool calibrate_FSM(LiquidCrystal * lcdPtr)
 {
@@ -22,7 +23,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->setCursor(0,1);
             lcdPtr->print("TO_SWITCH");
             // Run ccw
-            confMotor(40, 2);
+            confMotor(calib_fstep);
             runMotor(getROM());// rotate through range assuming starting at bag.
             break;
         }
@@ -53,14 +54,16 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print("TO_BAG");
 
             CUR_CALIBRATE_STATE = TO_BAG;
-            confMotor(40, 2);
-            runMotor(-1*getROM());//rotate gear cw
+            confMotor(calib_fstep);
+            runMotor(-1*getROM()/2);//rotate gear cw
             break;
         }
         case TO_BAG:
         {
             CUR_CALIBRATE_STATE = TO_BAG;
-            if(pressureCur >= pressurePrev || !checkMotorRunning())
+            if( pressureCur >= pressurePrev
+                || !checkMotorRunning()
+                ||  digitalRead(SetButton))
             {
                 stopMotor();
                 setSwitchToBag(getAngle());
@@ -83,7 +86,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->setCursor(0,3);
             lcdPtr->print("Homing             ");
             CUR_CALIBRATE_STATE = HOME;
-            confMotor(20, 2);
+            confMotor(calib_fstep);
             break;
         }
         case HOME:
