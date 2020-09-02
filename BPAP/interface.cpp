@@ -8,8 +8,8 @@ static float   _vol = 1.0;
 static float   _ie = 2;
 static int     _assist = -5;
 static int     _alarm = 20;
-static float   _switch_to_bag = 45.0;
-static float   _bag_to_centre = ROM - _switch_to_bag;
+static float   _switch_to_bag = -45.0;
+static float   _bag_to_centre = -1*(ROM - _switch_to_bag);
 static float   _sweep = ROM;
 static float   _fstep = 0.0;
 
@@ -28,7 +28,7 @@ int     getALARM(){return _alarm;}
 float   getSwitchToBag(){return _switch_to_bag;}
 float   getBagToCentre()
 {
-    _bag_to_centre = ROM - _switch_to_bag;
+    _bag_to_centre = -1*(ROM - abs(_switch_to_bag));
     return _bag_to_centre;
 }
 
@@ -41,8 +41,9 @@ void setSwitchToBag(float switch_to_bag){_switch_to_bag = switch_to_bag;}
 void setBagToCentre(float bag_to_centre){_bag_to_centre = bag_to_centre;}
 void addToSwitchToBag(float delta){_switch_to_bag += delta;}
 
-float calcStepRate(bool inhale, float sweep)
+float calcStepRate(bool inhale, float sweep, bool debug)
 {
+    _sweep = abs(sweep);
     _bps = _bpm/60;                      // beats per second [Hz]
     _T = 1/_bps;                          // period per beat [s]
     _in_T = _T/(_ie+1);                   // inhilation period [s]
@@ -50,11 +51,16 @@ float calcStepRate(bool inhale, float sweep)
 
     if(inhale)
     {
-        _fstep = (sweep/_in_T)/step_size;       // step rate
+        _fstep = (_sweep/_in_T)/step_size;       // step rate
     }
     else
     {
-        _fstep = (sweep/_ex_T)/step_size;       // step rate
+        _fstep = (_sweep/_ex_T)/step_size;       // step rate
+    }
+    if(debug)
+    {
+        debugInterface1();
+        debugInterface2();
     }
 
     return _fstep;
@@ -78,4 +84,40 @@ float getMotorIE()
 const int getSweep()
 {
     return _sweep;
+}
+
+void debugInterface1()
+{
+    Serial.println("DEBUG Interface 1:");
+    Serial.print("\t| _bpm: ");
+    Serial.print(_bpm);
+    Serial.print("\t| _vol: ");
+    Serial.print(_vol);
+    Serial.print("\t| _ie: ");
+    Serial.print(_ie);
+    Serial.print("\t| _assist: ");
+    Serial.println(_assist);
+    Serial.print("\t| _alarm: ");
+    Serial.print(_alarm);
+    Serial.print("\t| _switch_to_bag: ");
+    Serial.print(_switch_to_bag);
+    Serial.print("\t| _sweep: ");
+    Serial.print(_sweep);
+    Serial.print("\t| _fstep: ");
+    Serial.println(_fstep);
+}
+
+void debugInterface2()
+{
+    Serial.println("DEBUG Interface 2:");
+    Serial.print("\t| _bps: ");
+    Serial.print(_bps);
+    Serial.print("\t| _T: ");
+    Serial.print(_T);
+    Serial.print("\t| _ie: ");
+    Serial.println(_ie);
+    Serial.print("\t| _in_T: ");
+    Serial.print(_in_T);
+    Serial.print("\t| _ex_T: ");
+    Serial.println(_ex_T);
 }

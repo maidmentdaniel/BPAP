@@ -5,6 +5,8 @@ static int _counter1;
 static int _direction;
 static float _fstep;
 static float _sweep;
+static int _ICR4;
+static int _OCR4A;
 
 void confMotor(float fstep)
 {
@@ -28,12 +30,12 @@ void confMotor(float fstep)
 void setMotor(float fstep)
 {
     _fstep = fstep;
-    // ICR4_var = round((fck)/(N*fStep));
-    // OCR4A_var = round(0.5*ICR4_var);
+    _ICR4 = round((fck)/(N*_fstep));
+    _OCR4A = round(0.5*_ICR4);
     //Set frequency for an I:E ratio of 1:3 at 20BPM
-    ICR4 = round((fck)/(N*_fstep));
+    ICR4 = _ICR4;
     //Duty cycle is 50%, hence OCR4B = 0.5*ICR4
-    OCR4A = round(0.5*ICR4);
+    OCR4A = _OCR4A;
 
 }
 
@@ -55,7 +57,7 @@ void setMotor(float fstep)
     }
     TIMSK4 |= (1 << OCIE4A);
     TCCR4B = B00011011;
-    motorDebug();
+    // motorDebug();
 }
 
 void stopMotor()
@@ -93,10 +95,14 @@ const int getAngle()
 void motorDebug()
 {
     Serial.println("DEBUG Motor:");
-    Serial.print("\t| ROM: ");
-    Serial.print(ROM);
-    Serial.print("\t| fStep: ");
+    Serial.print("fStep: ");
     Serial.print(_fstep);
-    Serial.print("\t| ICR4: ");
-    Serial.println(ICR4);
+    Serial.print("\t| _counter1: ");
+    Serial.print(_counter1);
+    Serial.print("\t| _direction: ");
+    Serial.print(_direction);
+    Serial.print("\n| _sweep: ");
+    Serial.print(_sweep);
+    Serial.print("\t| _ICR4: ");
+    Serial.println(_ICR4);
 }

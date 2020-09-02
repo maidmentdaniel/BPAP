@@ -7,7 +7,7 @@ RUN_enum PREV_STATE = RUN_STATE;
 static float _pressCur = 0.00;
 static float _pressThresh = -2.00;
 static float _posCur = 0.00;
-static float _run_speed = 1600;
+static float _run_speed = 1000;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
@@ -21,23 +21,13 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
     _posCur = getAngle();
-    // Serial.print("Speed: ");
-    // Serial.print(getSpeed());
-    // Serial.print("\t| Angle: ");
-    // Serial.print(getAngle());
-    // Serial.print("\t| pressure ");
-    // Serial.print(_pressCur);
-    // Serial.print("\t| MotorIE 1:");
-    // Serial.print(getMotorIE());
-    // Serial.print("\t| Motor BPM ");
-    // Serial.println(getMotorBPM());
     switch(RUN_STATE)
     {
         case RUN_SETUP:
         {
             lcdPtr->clear();
             lcdPtr->print("Running RUN SETUP");
-            confMotor(calcStepRate(getBagToCentre(), true));
+            confMotor(calcStepRate(true, getBagToCentre(), false));
             RUN_STATE = WAIT_INHALE;
             break;
         }
@@ -47,7 +37,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print("AWAIT INHALE");
             if(_pressCur < _pressThresh)
             {
-                runMotor(-1*getBagToCentre());
+                runMotor(getBagToCentre());
                 RUN_STATE = SWEEP_IN;
             }
             break;
@@ -58,8 +48,8 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print("SWEEP IN    ");
             if(!checkMotorRunning())
             {
-                confMotor(calcStepRate(getBagToCentre(), false));
-                runMotor(getBagToCentre());
+                confMotor(calcStepRate(false, getBagToCentre(), false));
+                runMotor(-1*getBagToCentre());
                 RUN_STATE = SWEEP_OUT;
             }
             break;
@@ -96,22 +86,19 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             {
                 theta = -1*getSwitchToBag();
             }
-            Serial.println(PREV_STATE);
-            Serial.println(theta);
             runMotor(theta);
             RUN_STATE = DONE;
-            delay(5000);
             break;
         }
         case DONE:
         {
             lcdPtr->setCursor(8,0);
             lcdPtr->print("DONE       ");
-            delay(2000);
+            delay(1000);
             if(!checkMotorRunning())
             {
-                return true;
                 RUN_STATE = RUN_SETUP;
+                return true;
                 break;
             }
             break;

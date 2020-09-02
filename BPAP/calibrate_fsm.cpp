@@ -7,7 +7,7 @@ calib_enum PREV_CALIBRATE_STATE = CUR_CALIBRATE_STATE;
 float pressurePrev = 0;
 float pressureCur = 0;
 float homeInc = 0.09;
-float calib_fstep = 1600;
+float calib_fstep = 1000;
 
 bool calibrate_FSM(LiquidCrystal * lcdPtr)
 {
@@ -22,7 +22,6 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             CUR_CALIBRATE_STATE = TO_SWITCH;
             lcdPtr->setCursor(0,1);
             lcdPtr->print("TO_SWITCH");
-            // Run ccw
             confMotor(calib_fstep);
             runMotor(ROM);// rotate through range assuming starting at bag.
             break;
@@ -32,7 +31,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             CUR_CALIBRATE_STATE = TO_SWITCH;
             if( !digitalRead(laserPIN)
                 || !checkMotorRunning()
-                ||  digitalRead(SetButton))
+                || digitalRead(SetButton))
             {
                 stopMotor();
                 CUR_CALIBRATE_STATE = SET_LIMIT_POSITION;
@@ -107,7 +106,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             }
             else if(digitalRead(SetButton))
             {
-            CUR_CALIBRATE_STATE = FINISH;
+                CUR_CALIBRATE_STATE = FINISH;
             }
             break;
         }
@@ -142,7 +141,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->clear();
             lcdPtr->setCursor(0,1);
             lcdPtr->print("Finished Calibrating");
-            delay(2000);
+            delay(1000);
             lcdPtr->clear();
             CUR_CALIBRATE_STATE = BEGIN_CALIBRATE;
             return true;

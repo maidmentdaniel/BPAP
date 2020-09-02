@@ -26,12 +26,15 @@ void setSwitchToBag(float switch_to_bag);
 void setBagToCentre(float bag_to_centre);
 void addToSwitchToBag(float delta);
 
-float calcStepRate(bool inhale = true, float sweep = ROM);
+float calcStepRate(bool inhale = true, float sweep = ROM, bool debug = false);
 
 int getSpeed();
 float getMotorBPM();
 float getMotorIE();
 void motorDebug();
 const int getSweep();
+
+void debugInterface1();
+void debugInterface2();
 
 #endif

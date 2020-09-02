@@ -14,7 +14,8 @@ uint8_t rs = 13, en = 12, d4 = 11, d5 = 10, d6 = 9, d7 = 8;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 //VARIABLES
-main_enum MAIN_STATE = START;
+static main_enum MAIN_STATE = START;
+static main_enum PREV_STATE = MAIN_STATE;
 bool state_change = false;
 
 void setup()
@@ -36,6 +37,7 @@ void loop()
             delay(1000);
             lcd.clear();
             MAIN_STATE = CALIBRATE;
+            PREV_STATE = START;
             break;
         }
         case CALIBRATE:
@@ -49,28 +51,33 @@ void loop()
             {
                 MAIN_STATE = CALIBRATE;
             }
+            PREV_STATE = CALIBRATE;
             break;
         }
         case SETUP:
         {
-            MAIN_STATE = SETUP;
+            if(PREV_STATE==STOP)
+            {
+                confMotor(1000);
+                runMotor(getSwitchToBag());
+            }
             state_change = setup_FSM(&lcd);
             if(state_change)
             {
                 MAIN_STATE = RUN;
-                delay(500);
             }
+            PREV_STATE = SETUP;
             break;
         }
         case RUN:
         {
-            MAIN_STATE = RUN;
             state_change = run_FSM(&lcd);
             if(state_change)
             {
                 lcd.clear();
                 MAIN_STATE = STOP;
             }
+            PREV_STATE = RUN;
             break;
         }
         case STOP:
@@ -79,13 +86,22 @@ void loop()
             lcd.setCursor(0, 0);
             lcd.print("Main: STOP");
             lcd.setCursor(0, 1);
-            lcd.print("SET to restart");
+            lcd.print("SET to change settings");
             lcd.setCursor(0, 2);
-            lcd.print("and recalibrate");
+            lcd.print("and HOME IN to");
+            lcd.setCursor(0, 3);
+            lcd.print("recalibrate");
             if(digitalRead(SetButton))
             {
-                MAIN_STATE = START;
+                MAIN_STATE = SETUP;
+                delay(250);
             }
+            else if(digitalRead(Home_In))
+            {
+                MAIN_STATE = CALIBRATE;
+                delay(250);
+            }
+            PREV_STATE = STOP;
             break;
         }
         default:
