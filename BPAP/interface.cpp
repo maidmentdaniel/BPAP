@@ -33,7 +33,10 @@ float   getBagToCentre()
 }
 
 void setBPM(float bpm){_bpm = bpm;}
-void setVOL(float vol){_vol = vol;}
+void setVOL(float vol)
+{
+    _vol = (-1*vol/1023)+1.0;
+}
 void setIE(float ie){_ie = ie;}
 void setASIST(int assist){_assist = assist;}
 void setALARM(int alarm){_alarm = alarm;}
@@ -48,7 +51,6 @@ float calcStepRate(bool inhale, float sweep, bool debug)
     _T = 1/_bps;                          // period per beat [s]
     _in_T = _T/(_ie+1);                   // inhilation period [s]
     _ex_T = (_T*_ie)/(_ie+1);   // exhilation period [s]
-
     if(inhale)
     {
         _fstep = (_sweep/_in_T)/step_size;       // step rate

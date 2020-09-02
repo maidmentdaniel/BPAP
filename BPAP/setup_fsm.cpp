@@ -5,7 +5,9 @@ SETUP_enum SETUP_STATE = SET_DISPLAY;
 bool setup_FSM( LiquidCrystal * lcdPtr)
 {
   setBPM(map(analogRead(ReadBPM_Val), 0, 1023, 40, -1));
-  setVOL((map(analogRead(ReadTV_Val), 0, 1023, 99, 0))/100);
+  setVOL(analogRead(ReadTV_Val));
+  Serial.print("Vol: ");
+  Serial.println(getVOL());
   setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
   setASIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
   setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));

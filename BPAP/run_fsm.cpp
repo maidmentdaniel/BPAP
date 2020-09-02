@@ -37,7 +37,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print("AWAIT INHALE");
             if(_pressCur < _pressThresh)
             {
-                runMotor(getBagToCentre());
+                runMotor(getVOL()*getBagToCentre());
                 RUN_STATE = SWEEP_IN;
             }
             break;
@@ -49,7 +49,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             if(!checkMotorRunning())
             {
                 confMotor(calcStepRate(false, getBagToCentre(), false));
-                runMotor(-1*getBagToCentre());
+                runMotor(-1*getVOL()*getBagToCentre());
                 RUN_STATE = SWEEP_OUT;
             }
             break;
