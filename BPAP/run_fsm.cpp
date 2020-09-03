@@ -17,6 +17,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         _posCur = getAngle();
         stopMotor();
         confMotor(_run_speed);
+        runMotor(ROM);
         RUN_STATE = RUN_TO_SWITCH;
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
@@ -66,49 +67,22 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case RUN_TO_SWITCH:
         {
+            if(!digitalRead(laserPIN) || !checkMotorRunning())
+            {
+                stopMotor();
+                RUN_STATE = DONE;
+            }
             lcdPtr->setCursor(8,0);
             lcdPtr->print("TO SWITCH   ");
-            float theta = 0;
-            if(PREV_STATE == SWEEP_OUT)
-            {
-                lcdPtr->setCursor(0,2);
-                lcdPtr->print("PREV: SWEEP OUT      ");
-                theta = ROM - _posCur;
-            }
-            else if(PREV_STATE == SWEEP_IN)
-            {
-                lcdPtr->setCursor(0,2);
-                lcdPtr->print("PREV: SWEEP IN       ");
-                theta = (-1*getSwitchToBag())+_posCur;
-            }
-            else if(PREV_STATE == WAIT_INHALE)
-            {
-                lcdPtr->setCursor(0,2);
-                lcdPtr->print("PREV: WAIT INHALE    ");
-                theta = -1*getSwitchToBag();
-            }
-            else if(PREV_STATE == RUN_SETUP)
-            {
-                lcdPtr->setCursor(0,2);
-                lcdPtr->print("PREV: RUN SETUP      ");
-                theta = -1*getSwitchToBag();
-            }
-            delay(2000);
-            runMotor(-1*theta);
-            RUN_STATE = DONE;
             break;
         }
-        case DONE:
+        case DONE:// redundent now
         {
             lcdPtr->setCursor(8,0);
             lcdPtr->print("DONE       ");
             delay(1000);
-            if(!checkMotorRunning())
-            {
-                RUN_STATE = RUN_SETUP;
-                return true;
-                break;
-            }
+            RUN_STATE = RUN_SETUP;
+            return true;
             break;
         }
     }

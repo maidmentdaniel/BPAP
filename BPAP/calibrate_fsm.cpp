@@ -55,7 +55,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
 
             CUR_CALIBRATE_STATE = TO_BAG;
             confMotor(calib_fstep);
-            runMotor(-1*ROM/2);//rotate gear cw
+            runMotor(-1*ROM/3);//rotate gear cw
             break;
         }
         case TO_BAG:
@@ -93,7 +93,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         {
             lcdPtr->setCursor(7,3);
             CUR_CALIBRATE_STATE = HOME;
-            if(digitalRead(Home_In))
+            if(digitalRead(Home_In) && abs(getSwitchToBag())<ROM)
             {
                 lcdPtr->print("in. ");
                 runMotor(-1*homeInc);//rotate gear ccw

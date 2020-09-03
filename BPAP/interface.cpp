@@ -35,7 +35,7 @@ float   getBagToCentre()
 void setBPM(float bpm){_bpm = bpm;}
 void setVOL(float vol)
 {
-    _vol = (-1*vol/1023)+1.0;
+    _vol = (-1*vol/1023)+0.99;
 }
 void setIE(float ie){_ie = ie;}
 void setASIST(int assist){_assist = assist;}

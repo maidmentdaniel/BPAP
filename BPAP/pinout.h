@@ -17,6 +17,7 @@
 #define LED_Alarm 29  //LED lights on alarm
 #define Alarm_switch 4  //Pulls low --> Switch High
 
+//completely broken
 #define LimitSwitchPIN 2		// normally high switch to low. I think
 
 //Pressure Sensor

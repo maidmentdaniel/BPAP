@@ -82,15 +82,14 @@ void loop()
         }
         case STOP:
         {
-            lcd.clear();
             lcd.setCursor(0, 0);
             lcd.print("Main: STOP");
             lcd.setCursor(0, 1);
-            lcd.print("SET to change settings");
+            lcd.print("SET to change");
             lcd.setCursor(0, 2);
-            lcd.print("and HOME IN to");
+            lcd.print("settings and HOME");
             lcd.setCursor(0, 3);
-            lcd.print("recalibrate");
+            lcd.print("IN to recalibrate");
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = SETUP;
