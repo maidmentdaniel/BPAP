@@ -14,8 +14,8 @@ uint8_t rs = 13, en = 12, d4 = 11, d5 = 10, d6 = 9, d7 = 8;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 //VARIABLES
-static main_enum MAIN_STATE = START;
-static main_enum PREV_STATE = MAIN_STATE;
+main_enum MAIN_STATE = START;
+main_enum MAIN_PREV_STATE = MAIN_STATE;
 bool state_change = false;
 
 void setup()
@@ -37,7 +37,7 @@ void loop()
             delay(1000);
             lcd.clear();
             MAIN_STATE = CALIBRATE;
-            PREV_STATE = START;
+            MAIN_PREV_STATE = START;
             break;
         }
         case CALIBRATE:
@@ -51,12 +51,12 @@ void loop()
             {
                 MAIN_STATE = CALIBRATE;
             }
-            PREV_STATE = CALIBRATE;
+            MAIN_PREV_STATE = CALIBRATE;
             break;
         }
         case SETUP:
         {
-            if(PREV_STATE==STOP)
+            if(MAIN_PREV_STATE==STOP)
             {
                 confMotor(1000);
                 runMotor(getSwitchToBag());
@@ -66,7 +66,7 @@ void loop()
             {
                 MAIN_STATE = RUN;
             }
-            PREV_STATE = SETUP;
+            MAIN_PREV_STATE = SETUP;
             break;
         }
         case RUN:
@@ -77,7 +77,7 @@ void loop()
                 lcd.clear();
                 MAIN_STATE = STOP;
             }
-            PREV_STATE = RUN;
+            MAIN_PREV_STATE = RUN;
             break;
         }
         case STOP:
@@ -101,7 +101,7 @@ void loop()
                 MAIN_STATE = CALIBRATE;
                 delay(250);
             }
-            PREV_STATE = STOP;
+            MAIN_PREV_STATE = STOP;
             break;
         }
         default:

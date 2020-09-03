@@ -66,27 +66,35 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case RUN_TO_SWITCH:
         {
-            confMotor(_run_speed);
             lcdPtr->setCursor(8,0);
             lcdPtr->print("TO SWITCH   ");
             float theta = 0;
             if(PREV_STATE == SWEEP_OUT)
             {
-                theta = ROM-_posCur;
+                lcdPtr->setCursor(0,2);
+                lcdPtr->print("PREV: SWEEP OUT      ");
+                theta = ROM - _posCur;
             }
             else if(PREV_STATE == SWEEP_IN)
             {
+                lcdPtr->setCursor(0,2);
+                lcdPtr->print("PREV: SWEEP IN       ");
                 theta = (-1*getSwitchToBag())+_posCur;
             }
             else if(PREV_STATE == WAIT_INHALE)
             {
+                lcdPtr->setCursor(0,2);
+                lcdPtr->print("PREV: WAIT INHALE    ");
                 theta = -1*getSwitchToBag();
             }
             else if(PREV_STATE == RUN_SETUP)
             {
+                lcdPtr->setCursor(0,2);
+                lcdPtr->print("PREV: RUN SETUP      ");
                 theta = -1*getSwitchToBag();
             }
-            runMotor(theta);
+            delay(2000);
+            runMotor(-1*theta);
             RUN_STATE = DONE;
             break;
         }
