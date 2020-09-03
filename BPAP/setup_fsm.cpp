@@ -58,7 +58,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       if(digitalRead(SetButton))
       {
         lcdPtr->clear();
-        delay(500);
+        delay(250);
         SETUP_STATE = SET_DISPLAY;
         return true;
       }

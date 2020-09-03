@@ -87,9 +87,9 @@ void loop()
             lcd.setCursor(0, 1);
             lcd.print("SET to change");
             lcd.setCursor(0, 2);
-            lcd.print("settings and HOME");
+            lcd.print("settings and HOME IN");
             lcd.setCursor(0, 3);
-            lcd.print("IN to recalibrate");
+            lcd.print("to recalibrate");
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = SETUP;
