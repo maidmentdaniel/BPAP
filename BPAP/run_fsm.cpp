@@ -76,7 +76,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print("TO SWITCH   ");
             break;
         }
-        case DONE:// redundent now
+        case DONE:
         {
             lcdPtr->setCursor(8,0);
             lcdPtr->print("DONE       ");
