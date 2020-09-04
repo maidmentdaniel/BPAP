@@ -62,7 +62,6 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
         SETUP_STATE = SET_DISPLAY;
         return true;
       }
-      delay(100);
       break;
     }
   }

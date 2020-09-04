@@ -21,13 +21,20 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         RUN_STATE = RUN_TO_SWITCH;
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
-    _posCur = getAngle();
+    // _posCur = getAngle(); Might be redundent.
+
     switch(RUN_STATE)
     {
         case RUN_SETUP:
         {
             lcdPtr->clear();
             lcdPtr->print(F("Running RUN SETUP"));
+            lcdPtr->setCursor(0,1);
+            lcdPtr->print(F("Pressure     cmH2O  "));
+            lcdPtr->setCursor(0,2);
+            lcdPtr->print(F("Threshold    cmH2O  "));
+            lcdPtr->setCursor(0,3);
+            lcdPtr->print(F("SET to escape"));
             confMotor(calcStepRate(true, getBagToCentre(), false));
             _pressThresh = -1*getASSIST();
             RUN_STATE = WAIT_INHALE;
@@ -87,5 +94,13 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             break;
         }
     }
+    lcdPtr->setCursor(10,1);
+    lcdPtr->print(F("   "));
+    lcdPtr->setCursor(10,1);
+    lcdPtr->print(round(_pressCur));
+    lcdPtr->setCursor(10,2);
+    lcdPtr->print(F("   "));
+    lcdPtr->setCursor(10,2);
+    lcdPtr->print(round(_pressThresh));
     return false;
 }
