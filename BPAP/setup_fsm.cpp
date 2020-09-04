@@ -9,7 +9,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
   Serial.print(F("Vol: "));
   Serial.println(getVOL());
   setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
-  setASIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
+  setASSIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
   setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
   switch(SETUP_STATE)
   {
@@ -40,7 +40,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       lcdPtr->setCursor(11,0);
       lcdPtr->print(F("  "));
       lcdPtr->setCursor(11,0);
-      lcdPtr->print(round((getVOL()*100)));
+      lcdPtr->print((round((getVOL()*100))));
       lcdPtr->setCursor(19,0);
       lcdPtr->print(F(" "));
       lcdPtr->setCursor(19,0);
@@ -49,7 +49,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       lcdPtr->setCursor(7,1);
       lcdPtr->print(F("  "));
       lcdPtr->setCursor(7,1);
-      lcdPtr->print(getASIST());
+      lcdPtr->print(getASSIST());
       //line3
       lcdPtr->setCursor(6,2);
       lcdPtr->print(F("  "));
@@ -62,6 +62,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
         SETUP_STATE = SET_DISPLAY;
         return true;
       }
+      delay(100);
       break;
     }
   }

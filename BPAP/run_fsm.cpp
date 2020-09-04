@@ -29,6 +29,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->clear();
             lcdPtr->print(F("Running RUN SETUP"));
             confMotor(calcStepRate(true, getBagToCentre(), false));
+            _pressThresh = -1*getASSIST();
             RUN_STATE = WAIT_INHALE;
             break;
         }

@@ -23,7 +23,7 @@ float getStepSize(){return step_size;}
 float   getBPM(){return _bpm;}
 float   getVOL(){return _vol;}
 float   getIE(){return _ie;}
-int     getASIST(){return _assist;}
+int     getASSIST(){return _assist;}
 int     getALARM(){return _alarm;}
 float   getSwitchToBag(){return _switch_to_bag;}
 float   getBagToCentre()
@@ -38,7 +38,7 @@ void setVOL(float vol)
     _vol = (-1*vol/1023)+0.99;
 }
 void setIE(float ie){_ie = ie;}
-void setASIST(int assist){_assist = assist;}
+void setASSIST(int assist){_assist = assist;}
 void setALARM(int alarm){_alarm = alarm;}
 void setSwitchToBag(float switch_to_bag){_switch_to_bag = switch_to_bag;}
 void setBagToCentre(float bag_to_centre){_bag_to_centre = bag_to_centre;}
