@@ -8,6 +8,7 @@ static float _pressCur = 0.00;
 static float _pressThresh = -2.00;
 static float _posCur = 0.00;
 static float _run_speed = 1000;
+static float _set_point_pressure = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
@@ -21,7 +22,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         RUN_STATE = RUN_TO_SWITCH;
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
-    // _posCur = getAngle(); Might be redundent.
 
     switch(RUN_STATE)
     {
@@ -37,6 +37,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print(F("SET to escape"));
             confMotor(calcStepRate(true, getBagToCentre(), false));
             _pressThresh = -1*getASSIST();
+            _set_point_pressure = _pressCur;
             RUN_STATE = WAIT_INHALE;
             break;
         }
@@ -44,7 +45,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         {
             lcdPtr->setCursor(8,0);
             lcdPtr->print(F("AWAIT INHALE"));
-            if(_pressCur < _pressThresh)
+            if(_pressCur <= _pressThresh)
             {
                 runMotor(getVOL()*getBagToCentre());
                 RUN_STATE = SWEEP_IN;
