@@ -27,7 +27,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case RUN_SETUP:
         {
             lcdPtr->clear();
-            lcdPtr->print("Running RUN SETUP");
+            lcdPtr->print(F("Running RUN SETUP"));
             confMotor(calcStepRate(true, getBagToCentre(), false));
             RUN_STATE = WAIT_INHALE;
             break;
@@ -35,7 +35,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case WAIT_INHALE:
         {
             lcdPtr->setCursor(8,0);
-            lcdPtr->print("AWAIT INHALE");
+            lcdPtr->print(F("AWAIT INHALE"));
             if(_pressCur < _pressThresh)
             {
                 runMotor(getVOL()*getBagToCentre());
@@ -46,7 +46,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case SWEEP_IN:
         {
             lcdPtr->setCursor(8,0);
-            lcdPtr->print("SWEEP IN    ");
+            lcdPtr->print(F("SWEEP IN    "));
             if(!checkMotorRunning())
             {
                 confMotor(calcStepRate(false, getBagToCentre(), false));
@@ -58,7 +58,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case SWEEP_OUT:
         {
             lcdPtr->setCursor(8,0);
-            lcdPtr->print("SWEEP OUT   ");
+            lcdPtr->print(F("SWEEP OUT   "));
             if(!checkMotorRunning())
             {
                 RUN_STATE = RUN_SETUP;
@@ -73,13 +73,13 @@ bool run_FSM( LiquidCrystal * lcdPtr)
                 RUN_STATE = DONE;
             }
             lcdPtr->setCursor(8,0);
-            lcdPtr->print("TO SWITCH   ");
+            lcdPtr->print(F("TO SWITCH   "));
             break;
         }
         case DONE:
         {
             lcdPtr->setCursor(8,0);
-            lcdPtr->print("DONE       ");
+            lcdPtr->print(F("DONE       "));
             delay(1000);
             RUN_STATE = RUN_SETUP;
             return true;

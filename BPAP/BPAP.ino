@@ -33,7 +33,7 @@ void loop()
         case START:
         {
             lcd.clear();
-            lcd.print("START state");
+            lcd.print(F("START state"));
             delay(1000);
             lcd.clear();
             MAIN_STATE = CALIBRATE;
@@ -83,13 +83,13 @@ void loop()
         case STOP:
         {
             lcd.setCursor(0, 0);
-            lcd.print("Main: STOP");
+            lcd.print(F("Main: STOP"));
             lcd.setCursor(0, 1);
-            lcd.print("SET to change");
+            lcd.print(F("SET to change"));
             lcd.setCursor(0, 2);
-            lcd.print("settings and HOME IN");
+            lcd.print(F("settings and HOME IN"));
             lcd.setCursor(0, 3);
-            lcd.print("to recalibrate");
+            lcd.print(F("to recalibrate"));
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = SETUP;
@@ -105,7 +105,7 @@ void loop()
         }
         default:
         {
-            lcd.print("Main: DEFAULT");
+            lcd.print(F("Main: DEFAULT"));
             break;
         }
     }

@@ -94,15 +94,15 @@ const int getAngle()
 
 void motorDebug()
 {
-    Serial.println("DEBUG Motor:");
-    Serial.print("fStep: ");
+    Serial.println(F("DEBUG Motor:"));
+    Serial.print(F("fStep: "));
     Serial.print(_fstep);
-    Serial.print("\t| _counter1: ");
+    Serial.print(F("\t| _counter1: "));
     Serial.print(_counter1);
-    Serial.print("\t| _direction: ");
+    Serial.print(F("\t| _direction: "));
     Serial.print(_direction);
-    Serial.print("\n| _sweep: ");
+    Serial.print(F("\n| _sweep: "));
     Serial.print(_sweep);
-    Serial.print("\t| _ICR4: ");
+    Serial.print(F("\t| _ICR4: "));
     Serial.println(_ICR4);
 }

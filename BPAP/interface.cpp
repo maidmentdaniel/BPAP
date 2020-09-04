@@ -90,36 +90,36 @@ const int getSweep()
 
 void debugInterface1()
 {
-    Serial.println("DEBUG Interface 1:");
-    Serial.print("\t| _bpm: ");
+    Serial.println(F("DEBUG Interface 1:"));
+    Serial.print(F("\t| _bpm: "));
     Serial.print(_bpm);
-    Serial.print("\t| _vol: ");
+    Serial.print(F("\t| _vol: "));
     Serial.print(_vol);
-    Serial.print("\t| _ie: ");
+    Serial.print(F("\t| _ie: "));
     Serial.print(_ie);
-    Serial.print("\t| _assist: ");
+    Serial.print(F("\t| _assist: "));
     Serial.println(_assist);
-    Serial.print("\t| _alarm: ");
+    Serial.print(F("\t| _alarm: "));
     Serial.print(_alarm);
-    Serial.print("\t| _switch_to_bag: ");
+    Serial.print(F("\t| _switch_to_bag: "));
     Serial.print(_switch_to_bag);
-    Serial.print("\t| _sweep: ");
+    Serial.print(F("\t| _sweep: "));
     Serial.print(_sweep);
-    Serial.print("\t| _fstep: ");
+    Serial.print(F("\t| _fstep: "));
     Serial.println(_fstep);
 }
 
 void debugInterface2()
 {
-    Serial.println("DEBUG Interface 2:");
-    Serial.print("\t| _bps: ");
+    Serial.println(F("DEBUG Interface 2:"));
+    Serial.print(F("\t| _bps: "));
     Serial.print(_bps);
-    Serial.print("\t| _T: ");
+    Serial.print(F("\t| _T: "));
     Serial.print(_T);
-    Serial.print("\t| _ie: ");
+    Serial.print(F("\t| _ie: "));
     Serial.println(_ie);
-    Serial.print("\t| _in_T: ");
+    Serial.print(F("\t| _in_T: "));
     Serial.print(_in_T);
-    Serial.print("\t| _ex_T: ");
+    Serial.print(F("\t| _ex_T: "));
     Serial.println(_ex_T);
 }
