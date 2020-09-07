@@ -20,10 +20,9 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->clear();
             lcdPtr->print(F("Calibrating:"));
             CUR_CALIBRATE_STATE = TO_SWITCH;
-            lcdPtr->setCursor(0,1);
-            lcdPtr->print(F("TO_SWITCH"));
+            // lcdPtr->setCursor(0,1);
+            // lcdPtr->print(F("TO_SWITCH"));
             confMotor(calib_fstep);
-            // rotate through range assuming starting at bag.
             runMotor(ROM);
             break;
         }
@@ -42,16 +41,15 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         case SET_LIMIT_POSITION:// maybe redundent
         {
             lcdPtr->setCursor(0,1);
-            lcdPtr->print(F("SET_LIMIT_POSITION"));
-            delay(1000);
+            // lcdPtr->print(F("SET_LIMIT_POSITION"));
+            // delay(1000);
             pressurePrev = 0.2;
             lcdPtr->setCursor(15,3);
             lcdPtr->print(pressurePrev);
-
-            lcdPtr->setCursor(0,1);
-            lcdPtr->print(F("                    "));
-            lcdPtr->setCursor(0,1);
-            lcdPtr->print(F("TO_BAG"));
+            // lcdPtr->setCursor(0,1);
+            // lcdPtr->print(F("                    "));
+            // lcdPtr->setCursor(0,1);
+            // lcdPtr->print(F("TO_BAG"));
 
             CUR_CALIBRATE_STATE = TO_BAG;
             confMotor(calib_fstep);
@@ -142,7 +140,6 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->clear();
             lcdPtr->setCursor(0,1);
             lcdPtr->print(F("Finished Calibrating"));
-            delay(1000);
             lcdPtr->clear();
             CUR_CALIBRATE_STATE = BEGIN_CALIBRATE;
             return true;
