@@ -21,4 +21,4 @@
 #define ReadSensitivity A5  // pin Asist control sensitivity level
 
 //Lazer Beam
-#define laserPIN 31
+#define LimitSwitchPIN 31

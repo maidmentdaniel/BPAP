@@ -30,7 +30,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         case TO_SWITCH:
         {
             CUR_CALIBRATE_STATE = TO_SWITCH;
-            if( !digitalRead(laserPIN)
+            if( !digitalRead(LimitSwitchPIN)
                 || !checkMotorRunning()
                 || digitalRead(SetButton))
             {
@@ -99,7 +99,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
                 runMotor(-1*homeInc);//rotate gear ccw
                 CUR_CALIBRATE_STATE = HOME_IN;
             }
-            else if(digitalRead(Home_Out) && digitalRead(laserPIN))
+            else if(digitalRead(Home_Out) && digitalRead(LimitSwitchPIN))
             {
                 lcdPtr->print(F("out."));
                 runMotor(homeInc);//rotate gear cw

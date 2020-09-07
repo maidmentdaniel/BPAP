@@ -25,7 +25,7 @@
 #define ReadSensitivity A5	// pin Asist control sensitivity level
 
 //Laser Pin P10, 10k pullup --> Used for limit switch as limit switch appears to be broken
-#define laserPIN 31
+#define LimitSwitchPIN 31
 
 //Stepper Motor PWM on pin 6: timer 4, channel a
 #define drivePIN 6

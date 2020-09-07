@@ -29,7 +29,7 @@ void setup()
   pinMode(ReadSensitivity,INPUT); //Init Assist sensitivity
   
   pinMode(PressureSensorPIN,INPUT);         // Pressure sensor input
-  pinMode(laserPIN, INPUT);
+  pinMode(LimitSwitchPIN, INPUT);
   digitalWrite(LED_Alarm, HIGH);
   stepper.setMaxSpeed(1000);
   stepper.setSpeed(spd);
@@ -37,7 +37,7 @@ void setup()
 void loop()
 {  
   stepper.runSpeed();
-  pinRead = digitalRead(laserPIN);
+  pinRead = digitalRead(LimitSwitchPIN);
   Serial.println(pinRead);
   if(!pinRead)
   {

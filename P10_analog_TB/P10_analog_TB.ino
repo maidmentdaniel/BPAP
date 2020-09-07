@@ -8,6 +8,6 @@ void setup()
 
 void loop()
 {
-  Serial.println(digitalRead(laserPIN));
+  Serial.println(digitalRead(LimitSwitchPIN));
   delay(100);
 }

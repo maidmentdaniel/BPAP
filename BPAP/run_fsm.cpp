@@ -76,7 +76,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case RUN_TO_SWITCH:
         {
-            if(!digitalRead(laserPIN) || !checkMotorRunning())
+            if(!digitalRead(LimitSwitchPIN) || !checkMotorRunning())
             {
                 stopMotor();
                 RUN_STATE = DONE;
@@ -89,7 +89,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         {
             lcdPtr->setCursor(8,0);
             lcdPtr->print(F("DONE       "));
-            delay(1000);
+            delay(delay_const );
             RUN_STATE = RUN_SETUP;
             return true;
             break;

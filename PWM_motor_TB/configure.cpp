@@ -22,5 +22,5 @@ void configure_pins()
   pinMode(ReadSensitivity,INPUT);   //Init Assist sensitivity
   pinMode(PressureSensorPIN,INPUT); // Pressure sensor input
 
-  pinMode(laserPIN, INPUT);         //Alternative limit switch placement
+  pinMode(LimitSwitchPIN, INPUT);         //Alternative limit switch placement
 }

@@ -32,11 +32,16 @@ void loop()
     {
         case START:
         {
-            lcd.clear();
-            lcd.print(F("START state"));
-            delay(1000);
-            lcd.clear();
-            MAIN_STATE = CALIBRATE;
+            lcd.setCursor(1,1);
+            lcd.print(F("Press SET to begin"));
+            lcd.setCursor(4,2);
+            lcd.print(F("calibration."));
+            if(digitalRead(SetButton))
+            {
+                MAIN_STATE = CALIBRATE;
+                delay(250);
+                lcd.clear();
+            }
             MAIN_PREV_STATE = START;
             break;
         }
@@ -56,13 +61,8 @@ void loop()
         }
         case SETUP:
         {
-            if(MAIN_PREV_STATE==STOP)
-            {
-                confMotor(1000);
-                runMotor(getSwitchToBag());
-            }
             state_change = setup_FSM(&lcd);
-            if(state_change)
+            if(state_change) //confirm function.
             {
                 MAIN_STATE = RUN;
             }
@@ -83,22 +83,24 @@ void loop()
         case STOP:
         {
             lcd.setCursor(0, 0);
-            lcd.print(F("Main: STOP"));
+            lcd.print(F("Press SET to change"));
             lcd.setCursor(0, 1);
-            lcd.print(F("SET to change"));
+            lcd.print(F("settings."));
             lcd.setCursor(0, 2);
-            lcd.print(F("settings and HOME IN"));
+            lcd.print(F("Press HOME IN to"));
             lcd.setCursor(0, 3);
-            lcd.print(F("to recalibrate"));
+            lcd.print(F("recalibrate."));
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = SETUP;
-                delay(250);
+                confMotor(1000);
+                runMotor(getSwitchToBag());
+                delay(delay_const);
             }
             else if(digitalRead(Home_In))
             {
                 MAIN_STATE = CALIBRATE;
-                delay(250);
+                delay(delay_const);
             }
             MAIN_PREV_STATE = STOP;
             break;
