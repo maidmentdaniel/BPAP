@@ -2,7 +2,8 @@
 
 //PROTOTYPES
 RUN_enum RUN_STATE = RUN_SETUP;
-RUN_enum PREV_STATE = RUN_STATE;
+RUN_enum RUN_NEXT_STATE = RUN_SETUP;
+RUN_enum RUN_PREV_STATE = RUN_SETUP;
 
 static float _pressCur = 0.00;
 static float _pressThresh = -2.00;
@@ -12,17 +13,17 @@ static float _set_point_pressure = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
-    PREV_STATE = RUN_STATE;
     if(digitalRead(SetButton))
     {
         _posCur = getAngle();
         stopMotor();
         confMotor(_run_speed);
         runMotor(ROM);
-        RUN_STATE = RUN_TO_SWITCH;
+        RUN_NEXT_STATE = RUN_TO_SWITCH;
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
-
+    
+    RUN_STATE = RUN_NEXT_STATE;
     switch(RUN_STATE)
     {
         case RUN_SETUP:
@@ -38,7 +39,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             confMotor(calcStepRate(true, getBagToCentre(), false));
             _pressThresh = -1*getASSIST();
             _set_point_pressure = _pressCur;
-            RUN_STATE = WAIT_INHALE;
+            RUN_NEXT_STATE = WAIT_INHALE;
             break;
         }
         case WAIT_INHALE:
@@ -48,7 +49,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             if(_pressCur <= _pressThresh)
             {
                 runMotor(getVOL()*getBagToCentre());
-                RUN_STATE = SWEEP_IN;
+                RUN_NEXT_STATE = SWEEP_IN;
             }
             break;
         }
@@ -60,7 +61,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             {
                 confMotor(calcStepRate(false, getBagToCentre(), false));
                 runMotor(-1*getVOL()*getBagToCentre());
-                RUN_STATE = SWEEP_OUT;
+                RUN_NEXT_STATE = SWEEP_OUT;
             }
             break;
         }
@@ -70,7 +71,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print(F("SWEEP OUT   "));
             if(!checkMotorRunning())
             {
-                RUN_STATE = RUN_SETUP;
+                RUN_NEXT_STATE = RUN_SETUP;
             }
             break;
         }
@@ -79,7 +80,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             if(!digitalRead(LimitSwitchPIN) || !checkMotorRunning())
             {
                 stopMotor();
-                RUN_STATE = DONE;
+                RUN_NEXT_STATE = DONE;
             }
             lcdPtr->setCursor(8,0);
             lcdPtr->print(F("TO SWITCH   "));
@@ -90,7 +91,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->setCursor(8,0);
             lcdPtr->print(F("DONE       "));
             delay(delay_const );
-            RUN_STATE = RUN_SETUP;
+            RUN_NEXT_STATE = RUN_SETUP;
             return true;
             break;
         }
@@ -103,5 +104,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     lcdPtr->print(F("   "));
     lcdPtr->setCursor(10,2);
     lcdPtr->print(round(_pressThresh));
+    RUN_PREV_STATE = RUN_STATE;
     return false;
 }
