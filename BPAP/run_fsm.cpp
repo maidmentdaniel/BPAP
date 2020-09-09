@@ -22,7 +22,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         RUN_NEXT_STATE = RUN_TO_SWITCH;
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
-    
+
     RUN_STATE = RUN_NEXT_STATE;
     switch(RUN_STATE)
     {
