@@ -4,10 +4,11 @@
 calib_enum CUR_CALIBRATE_STATE = BEGIN_CALIBRATE;
 calib_enum PREV_CALIBRATE_STATE = CUR_CALIBRATE_STATE;
 
-float pressurePrev = 0;
-float pressureCur = 0;
-float homeInc = 0.09;
-float calib_fstep = 1000;
+static float pressurePrev = 0;
+static float pressureCur = 0;
+static float homeInc = 0.09;
+static float calib_fstep = 1000;
+static float calib_threshold = 0.5;
 
 bool calibrate_FSM(LiquidCrystal * lcdPtr)
 {
@@ -21,6 +22,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print(F("Calibrating:"));
             lcdPtr->setCursor(0,1);
             lcdPtr->print(F("TO_SWITCH           "));
+            delay(delay_const);
             CUR_CALIBRATE_STATE = TO_SWITCH;
             confMotor(calib_fstep);
             runMotor(ROM);
@@ -42,15 +44,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         {
             lcdPtr->setCursor(0,1);
             lcdPtr->print(F("SET_LIMIT_POSITION  "));
-            pressurePrev = pressureCur;
-            lcdPtr->setCursor(15,3);
-            lcdPtr->print(pressurePrev);
-            // delay(1000);
-            // lcdPtr->setCursor(0,1);
-            // lcdPtr->print(F("                    "));
-            // lcdPtr->setCursor(0,1);
-            // lcdPtr->print(F("TO_BAG"));
-
+            delay(delay_const);
             CUR_CALIBRATE_STATE = TO_BAG;
             confMotor(calib_fstep);
             runMotor(-0.75*ROM);//rotate gear cw
@@ -59,18 +53,15 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         case TO_BAG:
         {
             CUR_CALIBRATE_STATE = TO_BAG;
-            if( pressureCur >= pressurePrev+1
-                || !checkMotorRunning()
-                ||  digitalRead(SetButton))
+            if  (  (pressureCur >= pressurePrev + calib_threshold)
+                || (!checkMotorRunning())
+                || (digitalRead(SetButton))
+                )
             {
                 stopMotor();
                 setSwitchToBag(getAngle());
                 CUR_CALIBRATE_STATE = HOME_SETUP;
             }
-            lcdPtr->setCursor(0,3);
-            lcdPtr->print(F("     "));
-            lcdPtr->setCursor(0,3);
-            lcdPtr->print(pressureCur);
             break;
         }
         case HOME_SETUP:
@@ -105,6 +96,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
             }
             else if(digitalRead(SetButton))
             {
+                delay(delay_const);
                 CUR_CALIBRATE_STATE = FINISH;
             }
             break;

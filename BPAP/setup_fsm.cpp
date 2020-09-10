@@ -6,8 +6,6 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
 {
   setBPM(map(analogRead(ReadBPM_Val), 0, 1023, 40, -1));
   setVOL(analogRead(ReadTV_Val));
-  Serial.print(F("Vol: "));
-  Serial.println(getVOL());
   setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
   setASSIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
   setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
@@ -58,7 +56,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       if(digitalRead(SetButton))
       {
         lcdPtr->clear();
-        delay(250);
+        delay(delay_const);
         SETUP_STATE = SET_DISPLAY;
         return true;
       }
