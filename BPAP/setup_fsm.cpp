@@ -9,6 +9,11 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
   setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
   setASSIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
   setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
+
+  // Line 3:
+  lcdPtr->setCursor(18, 3);
+  lcdPtr->print(SETUP_STATE);
+
   switch(SETUP_STATE)
   {
     case SET_DISPLAY:
@@ -23,7 +28,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
       lcdPtr->print(F("ALARM   cmH2O       "));
       //line 3
       lcdPtr->setCursor(0,3);
-      lcdPtr->print(F("  SET to continue  "));
+      lcdPtr->print(F("SET to continue"));
       SETUP_STATE = DISPLAY_VAL;
       break;
     }

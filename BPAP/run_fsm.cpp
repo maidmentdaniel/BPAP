@@ -9,7 +9,6 @@ static float _pressCur = 0.00;
 static float _pressThresh = -2.00;
 static float _posCur = 0.00;
 static float _run_speed = 1000;
-static float _set_point_pressure = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
@@ -22,6 +21,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         RUN_NEXT_STATE = RUN_TO_SWITCH;
     }
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
+    _pressThresh = -1*getASSIST();
 
     setBPM(map(analogRead(ReadBPM_Val), 0, 1023, 40, -1));
     setVOL(analogRead(ReadTV_Val));
@@ -29,6 +29,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     setASSIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
     setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
 
+    // Line 0:
     lcdPtr->setCursor(4,0);
     lcdPtr->print(F("  "));
     lcdPtr->setCursor(4,0);
@@ -41,22 +42,28 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     lcdPtr->print(F(" "));
     lcdPtr->setCursor(19,0);
     lcdPtr->print(round(getIE()));
+    // Line 1:
     lcdPtr->setCursor(10,1);
     lcdPtr->print(F("   "));
     lcdPtr->setCursor(10,1);
     lcdPtr->print(round(_pressCur));
+    // Line 2:
     lcdPtr->setCursor(10,2);
     lcdPtr->print(F("   "));
     lcdPtr->setCursor(10,2);
     lcdPtr->print(round(_pressThresh));
 
     RUN_STATE = RUN_NEXT_STATE;
+    // Line 3:
+    lcdPtr->setCursor(18, 3);
+    lcdPtr->print(RUN_STATE);
+
     switch(RUN_STATE)
     {
         case RUN_SETUP:
         {
             lcdPtr->clear();
-            // lcdPtr->print(F("Running RUN SETUP"));
+            // Line 0:
             lcdPtr->print(F("BPM   |VOL   |iE 1: "));
             lcdPtr->setCursor(0,1);
             lcdPtr->print(F("Pressure     cmH2O  "));
@@ -64,16 +71,13 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             lcdPtr->print(F("Threshold    cmH2O  "));
             lcdPtr->setCursor(0,3);
             lcdPtr->print(F("SET to escape"));
+
             confMotor(calcStepRate(true, getBagToCentre(), false));
-            _pressThresh = -1*getASSIST();
-            _set_point_pressure = _pressCur;
             RUN_NEXT_STATE = WAIT_INHALE;
             break;
         }
         case WAIT_INHALE:
         {
-            // lcdPtr->setCursor(8,0);
-            // lcdPtr->print(F("AWAIT INHALE"));
             if(_pressCur <= _pressThresh)
             {
                 runMotor(getVOL()*getBagToCentre());
@@ -83,8 +87,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case SWEEP_IN:
         {
-            // lcdPtr->setCursor(8,0);
-            // lcdPtr->print(F("SWEEP IN    "));
             if(!checkMotorRunning())
             {
                 confMotor(calcStepRate(false, getBagToCentre(), false));
@@ -95,8 +97,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case SWEEP_OUT:
         {
-            // lcdPtr->setCursor(8,0);
-            // lcdPtr->print(F("SWEEP OUT   "));
             if(!checkMotorRunning())
             {
                 RUN_NEXT_STATE = RUN_SETUP;
@@ -110,15 +110,11 @@ bool run_FSM( LiquidCrystal * lcdPtr)
                 stopMotor();
                 RUN_NEXT_STATE = DONE;
             }
-            // lcdPtr->setCursor(8,0);
-            // lcdPtr->print(F("TO SWITCH   "));
             break;
         }
         case DONE:
         {
-            // lcdPtr->setCursor(8,0);
-            // lcdPtr->print(F("DONE       "));
-            // delay(delay_const );
+            delay(delay_const);
             RUN_NEXT_STATE = RUN_SETUP;
             return true;
             break;

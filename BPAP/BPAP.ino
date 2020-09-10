@@ -8,7 +8,7 @@
 #include "run_fsm.h"
 
 //ENUMERATIONS
-enum main_enum {START, SETUP, CALIBRATE, WAIT, RUN, STOP};
+enum main_enum {START, CALIBRATE,  SETUP, RUN, STOP};
 
 uint8_t rs = 13, en = 12, d4 = 11, d5 = 10, d6 = 9, d7 = 8;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -28,6 +28,10 @@ void setup()
 
 void loop()
 {
+    // Line 3:
+    lcd.setCursor(17, 3);
+    lcd.print(MAIN_STATE);
+
     switch(MAIN_STATE)
     {
         case START:
@@ -36,10 +40,12 @@ void loop()
             lcd.print(F("Press SET to begin"));
             lcd.setCursor(4,2);
             lcd.print(F("calibration."));
+            lcd.setCursor(18, 3);
+            lcd.print(F(" "));
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = CALIBRATE;
-                delay(250);
+                delay(delay_const);
                 lcd.clear();
             }
             MAIN_PREV_STATE = START;
@@ -62,7 +68,7 @@ void loop()
         case SETUP:
         {
             state_change = setup_FSM(&lcd);
-            if(state_change) //confirm function.
+            if(state_change)
             {
                 MAIN_STATE = RUN;
             }
@@ -90,6 +96,8 @@ void loop()
             lcd.print(F("Press HOME IN to"));
             lcd.setCursor(0, 3);
             lcd.print(F("recalibrate."));
+            lcd.setCursor(18, 3);
+            lcd.print(F(" "));
             if(digitalRead(SetButton))
             {
                 MAIN_STATE = SETUP;

@@ -14,6 +14,11 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
 {
     PREV_CALIBRATE_STATE = CUR_CALIBRATE_STATE;
     pressureCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
+
+    // Line 3:
+    lcdPtr->setCursor(18, 3);
+    lcdPtr->print(CUR_CALIBRATE_STATE);
+
     switch(CUR_CALIBRATE_STATE)
     {
         case BEGIN_CALIBRATE:
