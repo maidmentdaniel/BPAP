@@ -2,9 +2,9 @@
 void configure_pins()
 {
   pinMode(LED_Alarm, OUTPUT);      // Alarm LED
-  pinMode(Alarm,INPUT);
-  digitalWrite(Alarm, LOW);
-  
+  pinMode(Alarm_PIN, INPUT);
+  analogWrite(Alarm_PIN, 0);
+
   //switches
   pinMode(ToggleSwitch,INPUT);    // Toggle switch
   pinMode(LimitSwitchPIN,INPUT);  // Limit switch input
@@ -13,7 +13,7 @@ void configure_pins()
   pinMode(Home_Out,INPUT);        // Homing towards outside input
   pinMode(SetButton, INPUT_PULLUP);      //Set button
   pinMode(Alarm_switch, INPUT);   //Alarm button
-    
+
   //analog
   pinMode(ReadBPM_Val,INPUT);       // init BPM
   pinMode(ReadTV_Val,INPUT);        // init Tidal Volume

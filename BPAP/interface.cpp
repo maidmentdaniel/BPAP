@@ -12,6 +12,7 @@ static float   _switch_to_bag = -45.0;
 static float   _bag_to_centre = -1*(ROM - _switch_to_bag);
 static float   _sweep = ROM;
 static float   _fstep = 0.0;
+static bool _alarm_state = true;
 
 static float _bps = _bpm/60;                      // beats per second [Hz]
 static float _T = 1/_bps;                          // period per beat [s]
@@ -122,4 +123,23 @@ void debugInterface2()
     Serial.print(_in_T);
     Serial.print(F("\t| _ex_T: "));
     Serial.println(_ex_T);
+}
+
+
+void startALARM()
+{
+    analogWrite(Alarm_PIN, 255);
+    digitalWrite(LED_Alarm, 1);
+}
+
+void toggleAlarm()
+{
+    analogWrite(Alarm_PIN, 0);
+    digitalWrite(LED_Alarm, 0);
+}
+
+void stopAlarm()
+{
+    analogWrite(Alarm_PIN, 0);
+    digitalWrite(LED_Alarm, 0);
 }
