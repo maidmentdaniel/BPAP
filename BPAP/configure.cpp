@@ -2,8 +2,8 @@
 void configure_pins()
 {
   pinMode(LED_Alarm, OUTPUT);      // Alarm LED
-  pinMode(Alarm_PIN, INPUT);
-  analogWrite(Alarm_PIN, 0);
+  pinMode(Buzzer_PIN, OUTPUT);     //buzzer
+  analogWrite(Buzzer_PIN, 0);
 
   //switches
   pinMode(ToggleSwitch,INPUT);    // Toggle switch

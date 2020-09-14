@@ -6,7 +6,7 @@
 #define ROM 72              // [deg] Range of Motion from switch to center for drive gear
 #define step_size 0.09      // [deg/step] stepper motor step size
 #define delay_const 500
-#define PIP 35              //PIP alarm threshold
+#define PIP 40              //PIP alarm threshold
 
 //Buttons and switches - External 10kOhm Pulls low --> Switch High
 #define Home_In 25		//
@@ -15,7 +15,7 @@
 #define SetButton 5	//
 
   //Alarm
-#define Alarm_PIN 23  //Alarm digital pin
+#define Buzzer_PIN 23  //Alarm digital pin
 #define LED_Alarm 29  //LED lights on alarm
 #define Alarm_switch 4  //Pulls low --> Switch High
 

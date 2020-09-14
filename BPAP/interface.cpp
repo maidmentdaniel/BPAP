@@ -128,18 +128,12 @@ void debugInterface2()
 
 void startALARM()
 {
-    analogWrite(Alarm_PIN, 255);
+    // analogWrite(Buzzer_PIN, 255);
     digitalWrite(LED_Alarm, 1);
-}
-
-void toggleAlarm()
-{
-    analogWrite(Alarm_PIN, 0);
-    digitalWrite(LED_Alarm, 0);
 }
 
 void stopAlarm()
 {
-    analogWrite(Alarm_PIN, 0);
+    analogWrite(Buzzer_PIN, 0);
     digitalWrite(LED_Alarm, 0);
 }

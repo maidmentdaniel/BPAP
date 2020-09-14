@@ -9,15 +9,14 @@ static float _pressCur = 0.00;
 static float _pressThresh = -2.00;
 static float _posCur = 0.00;
 static float _run_speed = 1000;
-static bool _alarm_state = true;
-static long _start_time = 0;
+static bool _alarm_state = false;
+static volatile long _start_time = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
     if(digitalRead(SetButton))
     {
         stopAlarm();
-        _alarm_state = true;
         _posCur = getAngle();
         stopMotor();
         confMotor(_run_speed);
@@ -29,12 +28,19 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     if((_pressCur >= PIP) && _alarm_state)
     {
         startALARM();
+        lcdPtr->setCursor(19, 3);
+        lcdPtr->print(RUN_STATE);
+        lcdPtr->print(2);
     }
 
-    if (digitalRead(Alarm_switch))
+    if(digitalRead(Alarm_switch))
     {
         stopAlarm();
         _alarm_state = !_alarm_state;
+        _start_time = millis();
+        lcdPtr->setCursor(19, 3);
+        lcdPtr->print(RUN_STATE);
+        lcdPtr->print(" ");
         delay(delay_const);
     }
 
@@ -97,10 +103,12 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case WAIT_INHALE:
         {
-            Serial.println(millis()-_start_time);
-            if(millis()-30000 >= _start_time && _alarm_state)
+            if((millis() - _start_time >= 30000) && _alarm_state)
             {
                 startALARM();
+                lcdPtr->setCursor(19, 3);
+                lcdPtr->print(RUN_STATE);
+                lcdPtr->print(1);
             }
             if(_pressCur <= _pressThresh)
             {
@@ -123,6 +131,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         {
             if(!checkMotorRunning())
             {
+                _start_time = millis();
                 RUN_NEXT_STATE = WAIT_INHALE;
             }
             break;
@@ -138,7 +147,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         }
         case DONE:
         {
-            delay(delay_const);
             RUN_NEXT_STATE = RUN_SETUP;
             return true;
             break;

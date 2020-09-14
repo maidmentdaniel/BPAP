@@ -38,7 +38,6 @@ void debugInterface1();
 void debugInterface2();
 
 void startALARM();
-void toggleAlarm();
 void stopAlarm();
 
 #endif
