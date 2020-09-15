@@ -1,7 +1,7 @@
 #include 'log_fsm.h'
 
 log_enum CUR_LOG_STATE = LOG_START;
-log_enum PREV_LOG_STATE = CUR_LOG_STATE;
+// log_enum PREV_LOG_STATE = CUR_LOG_STATE;
 
 bool log_FSM(LiquidCrystal * lcdPtr)
 {
@@ -17,6 +17,11 @@ bool log_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print(F("reading LOG data to "));
             lcdPtr->setCursor(0,3);
             lcdPtr->print(F("USB port."));
+            if(digitalRead(SetButton)):
+            {
+                CUR_LOG_STATE = LOG_READOUT;
+            }
+            CUR_LOG_STATE = LOG_START;
             break;
         }
         case LOG_READOUT:
