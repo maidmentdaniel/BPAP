@@ -1,0 +1,34 @@
+
+
+- Calibration mode validation:
+	- Run calibration_fsm on repeat.
+	- log:
+		- limit switch is open,
+		- bag detected condition,
+		- angle of limit switch to bag.
+
+- Setup mode validation:
+	- Run setup_FSM on repeat with delay logging of values.
+	- log:
+		- time stamp,
+		- setting values.
+
+- Run mode validation:
+	- Run run_fsm on repeat.
+	- log:
+		- breath detected,
+		- pressure at detection,
+		- inhale stroke,
+		- pressure at stroke end,
+		- angle at stroke end,
+		- exhale stroke,
+		- pressure at stroke end,
+		- angle at stroke end.
+
+- Main state loop validation:
+	- Run  MAIN_STATE on repeat
+	- log:
+		- time stamp
+		- each state.
+
+
