@@ -6,9 +6,10 @@
 #include "calibrate_fsm.h"
 #include "setup_fsm.h"
 #include "run_fsm.h"
+#include "EEPROM.h"
 
 //ENUMERATIONS
-enum main_enum {START, CALIBRATE,  SETUP, RUN, STOP};
+enum main_enum {START, CALIBRATE,  SETUP, RUN, STOP, LOG};
 
 uint8_t rs = 13, en = 12, d4 = 11, d5 = 10, d6 = 9, d7 = 8;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -31,6 +32,8 @@ void loop()
     // Line 3:
     lcd.setCursor(17, 3);
     lcd.print(MAIN_STATE);
+    lcd.setCursor(16, 3);
+    lcd.print(digitalRead(ToggleSwitch));
 
     switch(MAIN_STATE)
     {
@@ -110,8 +113,24 @@ void loop()
                 MAIN_STATE = CALIBRATE;
                 delay(delay_const);
             }
+            else if (digitalRead(Home_Out))
+            {
+                MAIN_STATE = LOG;
+                lcd.clear():
+            }
             MAIN_PREV_STATE = STOP;
             break;
+        case LOG:
+        {
+            state_change = log_fsm(&lcd);
+            if(state_change)
+            {
+                lcd.clear();
+                MAIN_STATE = STOP;
+            }
+            MAIN_PREV_STATE = LOG;
+            break;
+        }
         }
         default:
         {
