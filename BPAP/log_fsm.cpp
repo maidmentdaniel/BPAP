@@ -1,6 +1,7 @@
 #include 'log_fsm.h'
 
 log_enum CUR_LOG_STATE = LOG_START;
+static int addr
 // log_enum PREV_LOG_STATE = CUR_LOG_STATE;
 
 bool log_FSM(LiquidCrystal * lcdPtr)

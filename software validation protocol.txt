@@ -1,4 +1,5 @@
-
+- Continous operation through power cut by logging timestamps of operation. Using time stamp.
+- Run battery duration.
 
 - Calibration mode validation:
 	- Run calibration_fsm on repeat.
