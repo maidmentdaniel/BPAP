@@ -4,9 +4,9 @@ from datetime import date
 
 now = date.today()
 filename = "20{}_raw_data.txt".format(now.strftime('%y_%m_%d'))
-port = "COM23"
-
-ser = serial.Serial(port, 9600)
+# port = "COM23"
+#
+# ser = serial.Serial(port, 9600)
 
 state = {
     "START":   0,
@@ -15,5 +15,8 @@ state = {
     "THIRD":   3
 }
 
+cur_state = state["START"]
 print(state)
+print(cur_state)
+print(filename)
 # while()
