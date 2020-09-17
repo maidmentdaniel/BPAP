@@ -33,6 +33,16 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         lcdPtr->print(2);
     }
 
+    if(digitalRead(ToggleSwitch))
+    {
+        writeEEPROM(RUN_STATE);
+        // state_change = writeEEPROM(RUN_STATE);
+        // if(state_change)
+        // {
+        //     MAIN_STATE = STOP;
+        // }
+    }
+
     if(digitalRead(Alarm_switch))
     {
         stopAlarm();

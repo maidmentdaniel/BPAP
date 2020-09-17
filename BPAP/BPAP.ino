@@ -25,7 +25,7 @@ void setup()
     configure_pins();
     lcd.begin(20, 4);
     lcd.clear();
-    // Serial.begin(9600);
+    Serial.begin(9600);
 }
 
 void loop()
@@ -35,14 +35,6 @@ void loop()
     lcd.print(MAIN_STATE);
     lcd.setCursor(16, 3);
     lcd.print(digitalRead(ToggleSwitch));
-    if(digitalRead(ToggleSwitch))
-    {
-        state_change = writeEEPROM(MAIN_STATE);
-        if(state_change)
-        {
-            MAIN_STATE = STOP;
-        }
-    }
 
     switch(MAIN_STATE)
     {

@@ -1,50 +1,57 @@
-#include "log_fsm.h"
+#include log_fsm
 
 log_enum CUR_LOG_STATE = LOG_START;
 // log_enum PREV_LOG_STATE = CUR_LOG_STATE;
-int addr = 0;
+static volatile int _addr = 0;
+static byte _val = 0;
 
 bool log_FSM(LiquidCrystal * lcdPtr)
 {
+    lcdPtr->setCursor(0,0);
+    lcdPtr->print(F("LOG Mode:"));
     switch (CUR_LOG_STATE)
     {
         case LOG_START:
         {
-            lcdPtr->clear();
-            lcdPtr->print(F("LOG Mode:"));
             lcdPtr->setCursor(0,1);
             lcdPtr->print(F("Press SET to begin"));
             lcdPtr->setCursor(0,2);
             lcdPtr->print(F("reading LOG data to "));
             lcdPtr->setCursor(0,3);
             lcdPtr->print(F("USB port."));
-            Serial.begin(9600);
             if(digitalRead(SetButton))
             {
                 CUR_LOG_STATE = LOG_READOUT;
+                lcdPtr->clear();
+                delay(delay_const);
             }
-            CUR_LOG_STATE = LOG_START;
             break;
         }
         case LOG_READOUT:
         {
-            byte val;
+            lcdPtr->setCursor(0,1);
+            lcdPtr->print(F("Reading out.        "));
             for(int i = 0; i < EEPROM.length(); i++)
             {
-                val = EEPROM.read(i);
-                Serial.println(val);
+                _val = EEPROM.read(i);
+                Serial.print("memory_val: ");
+                Serial.println(_val);
             }
+            lcdPtr->clear();
             CUR_LOG_STATE = LOG_STOP;
             break;
         }
         case LOG_STOP:
         {
-            lcdPtr->clear();
-            lcdPtr->print(F("Clearing Memory."));
+            lcdPtr->setCursor(0,0);
+            lcdPtr->print(F("LOG Mode:"));
+            lcdPtr->setCursor(0,1);
+            lcdPtr->print(F("Clearing memory.    "));
             for(int i = 0; i < EEPROM.length(); i++)
             {
                 EEPROM.write(i, 0);
             }
+            CUR_LOG_STATE = LOG_START;
             return true;
             break;
         }
@@ -54,10 +61,10 @@ bool log_FSM(LiquidCrystal * lcdPtr)
 
 bool writeEEPROM(int x)
 {
-    if(addr < EEPROM.length())
+    if(_val < EEPROM.length())
     {
-        EEPROM.write(addr, uint8_t(x));
-        addr +=1;
+        EEPROM.write(_addr, uint8_t(x));
+        _addr +=1;
         return false;
     }
     else

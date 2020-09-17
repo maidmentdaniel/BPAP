@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "pinout.h"
+#include "log_fsm.h"
 
 long int getClockSpeed();
 int getClockDiv();
