@@ -6,6 +6,7 @@
 #include "calibrate_fsm.h"
 #include "setup_fsm.h"
 #include "run_fsm.h"
+#include "log_fsm.h"
 #include "EEPROM.h"
 
 //ENUMERATIONS
@@ -24,7 +25,7 @@ void setup()
     configure_pins();
     lcd.begin(20, 4);
     lcd.clear();
-    Serial.begin(9600);
+    // Serial.begin(9600);
 }
 
 void loop()
@@ -34,6 +35,14 @@ void loop()
     lcd.print(MAIN_STATE);
     lcd.setCursor(16, 3);
     lcd.print(digitalRead(ToggleSwitch));
+    if(digitalRead(ToggleSwitch))
+    {
+        state_change = writeEEPROM(MAIN_STATE);
+        if(state_change)
+        {
+            MAIN_STATE = STOP;
+        }
+    }
 
     switch(MAIN_STATE)
     {
@@ -116,13 +125,13 @@ void loop()
             else if (digitalRead(Home_Out))
             {
                 MAIN_STATE = LOG;
-                lcd.clear():
+                lcd.clear();
             }
             MAIN_PREV_STATE = STOP;
             break;
         case LOG:
         {
-            state_change = log_fsm(&lcd);
+            state_change = log_FSM(&lcd);
             if(state_change)
             {
                 lcd.clear();

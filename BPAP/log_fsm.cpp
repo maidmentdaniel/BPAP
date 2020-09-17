@@ -1,8 +1,8 @@
-#include 'log_fsm.h'
+#include "log_fsm.h"
 
 log_enum CUR_LOG_STATE = LOG_START;
-static int addr
 // log_enum PREV_LOG_STATE = CUR_LOG_STATE;
+int addr = 0;
 
 bool log_FSM(LiquidCrystal * lcdPtr)
 {
@@ -18,7 +18,8 @@ bool log_FSM(LiquidCrystal * lcdPtr)
             lcdPtr->print(F("reading LOG data to "));
             lcdPtr->setCursor(0,3);
             lcdPtr->print(F("USB port."));
-            if(digitalRead(SetButton)):
+            Serial.begin(9600);
+            if(digitalRead(SetButton))
             {
                 CUR_LOG_STATE = LOG_READOUT;
             }
@@ -27,17 +28,40 @@ bool log_FSM(LiquidCrystal * lcdPtr)
         }
         case LOG_READOUT:
         {
+            byte val;
+            for(int i = 0; i < EEPROM.length(); i++)
+            {
+                val = EEPROM.read(i);
+                Serial.println(val);
+            }
+            CUR_LOG_STATE = LOG_STOP;
             break;
         }
         case LOG_STOP:
         {
+            lcdPtr->clear();
+            lcdPtr->print(F("Clearing Memory."));
+            for(int i = 0; i < EEPROM.length(); i++)
+            {
+                EEPROM.write(i, 0);
+            }
             return true;
             break;
         }
-        // case :
-        // {
-        //     break;
-        // }
     }
     return false;
+}
+
+bool writeEEPROM(int x)
+{
+    if(addr < EEPROM.length())
+    {
+        EEPROM.write(addr, uint8_t(x));
+        addr +=1;
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
