@@ -1,4 +1,4 @@
-#include log_fsm
+#include "log_fsm.h"
 
 log_enum CUR_LOG_STATE = LOG_START;
 // log_enum PREV_LOG_STATE = CUR_LOG_STATE;
@@ -34,7 +34,6 @@ bool log_FSM(LiquidCrystal * lcdPtr)
             for(int i = 0; i < EEPROM.length(); i++)
             {
                 _val = EEPROM.read(i);
-                Serial.print("memory_val: ");
                 Serial.println(_val);
             }
             lcdPtr->clear();
