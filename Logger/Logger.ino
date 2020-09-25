@@ -1,14 +1,16 @@
 #include "pinout.h"
 #include "configure.h"
+#define SIZE 10
 
 //ENUMERATIONS
-enum main_enum {START, CALIBRATE,  SETUP, RUN, STOP, LOG};
+enum main_enum {START, RECEIVE, TRANSMIT,  SETUP, RUN, STOP, LOG};
 
 //VARIABLES
-main_enum MAIN_STATE = START;
-main_enum MAIN_PREV_STATE = MAIN_STATE;
-// bool state_change = false;
-char incomingByte = 0; // for incoming serial data
+main_enum MAIN_STATE = RECEIVE;
+
+// int size = 10;
+char incomingBuffer[SIZE]; // for incoming serial data
+uint8_t idx = 0;
 
 void setup()
 {
@@ -18,14 +20,35 @@ void setup()
 
 void loop()
 {
+    switch(MAIN_STATE)
+    {
+        case RECEIVE:
+        {
+            if(Serial.available() > 0)
+            {
+                incomingBuffer[idx] = Serial.read();
+                idx += 1;
+                if(Serial.available() <= 0 || idx > SIZE-1)
+                {
+                    MAIN_STATE = TRANSMIT;
+                    idx = 0;
+                    delay(100);
+                }
+            }
+            break;
+        }
+        case TRANSMIT:
+        {
+            for(int i=0; i<SIZE; i++)
+            {
+                Serial.print(incomingBuffer[i]);
+            }
+            MAIN_STATE = RECEIVE;
+            break;
+        }
+    }
   // send data only when you receive data:
-  if (Serial.available() > 0)
-  {
-        // read the incoming byte:
-        incomingByte = Serial.read();
-        // say what you got:
-        Serial.println(incomingByte);
-  }
+
     // switch(MAIN_STATE)
     // {
     //     case START:

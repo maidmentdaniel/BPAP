@@ -29,8 +29,9 @@ if __name__ == "__main__":
             #
         elif(cur_state == state["SEND"]):
             #
-            print("Sending: ", np.ubyte(user_in), '\n')
-            ser.write(np.ubyte(user_in))
+            user_in_b = user_in.encode('UTF-8')
+            print("Sending: ", user_in_b, '\n')
+            ser.write(user_in_b)
             cur_state = state["RECEIVE"]
             tic = time.time()
             #
@@ -38,8 +39,10 @@ if __name__ == "__main__":
             #
             print("RECEIVE state:")
             toc = time.time()
-            if(ser.in_waiting >= 0):
-                serData = ser.readline().decode('ascii').strip()
+            print("time: ", toc-tic)
+            if(ser.in_waiting > 0):
+                serData = ser.readline().strip().decode('ascii')
+                # serData = ser.readline().decode('ascii').strip()
                 print("Data received: ", serData, '\n')
                 cur_state = state["USER"]
             elif(toc-tic >= 10 and counter <= 2):
@@ -47,7 +50,7 @@ if __name__ == "__main__":
                 print("Counter: ", counter, '\n')
                 cur_state = state["SEND"]
                 counter += 1
-            else:
+            elif(counter > 2):
                 print("Done Waiting")
                 cur_state = state["USER"]
     print("DONE")
