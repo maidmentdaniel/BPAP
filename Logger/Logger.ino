@@ -1,6 +1,7 @@
 #include "pinout.h"
 #include "configure.h"
 #define SIZE 10
+#define time_delay   1000
 
 //ENUMERATIONS
 enum main_enum {START, RECEIVE, TRANSMIT,  SETUP, RUN, STOP, LOG};
@@ -9,8 +10,9 @@ enum main_enum {START, RECEIVE, TRANSMIT,  SETUP, RUN, STOP, LOG};
 main_enum MAIN_STATE = RECEIVE;
 
 // int size = 10;
-char incomingBuffer[SIZE]; // for incoming serial data
+char incomingBuffer[SIZE] = {0}; // for incoming serial data
 uint8_t idx = 0;
+int num_bytes = 0;
 
 void setup()
 {
@@ -24,25 +26,33 @@ void loop()
     {
         case RECEIVE:
         {
-            if(Serial.available() > 0)
+            num_bytes = Serial.available();
+            if(num_bytes > 0)
             {
-                incomingBuffer[idx] = Serial.read();
-                idx += 1;
-                if(Serial.available() <= 0 || idx > SIZE-1)
+                for(int i = 0; i<num_bytes; i++)
                 {
-                    MAIN_STATE = TRANSMIT;
-                    idx = 0;
-                    delay(100);
+                    incomingBuffer[i] = Serial.read();
                 }
+                // Serial.readBytes(incomingBuffer, num_bytes);
+                delay(time_delay);
+                MAIN_STATE = TRANSMIT;
             }
             break;
         }
         case TRANSMIT:
         {
-            for(int i=0; i<SIZE; i++)
-            {
-                Serial.print(incomingBuffer[i]);
-            }
+            // Serial.write("No. recieved: ");
+            // delay(time_delay);
+            // Serial.write(num_bytes);
+            // delay(time_delay);
+            // Serial.write('\n');
+            // delay(time_delay);
+            Serial.write("Buffer: ");
+            delay(time_delay);
+            Serial.write(incomingBuffer, DEC);
+            delay(time_delay);
+            incomingBuffer[SIZE] = {0};
+            // Serial.write('\n');
             MAIN_STATE = RECEIVE;
             break;
         }
