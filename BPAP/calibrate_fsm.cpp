@@ -18,6 +18,16 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
     // Line 3:
     lcdPtr->setCursor(18, 3);
     lcdPtr->print(CUR_CALIBRATE_STATE);
+    // Datalogging
+    if(digitalRead(ToggleSwitch))
+    {
+        Serial.print("calibrate_fsm,");
+        Serial.println(CUR_CALIBRATE_STATE);
+        Serial.print("arm_angle,");
+        Serial.println(getAngle());
+        Serial.print("pressure,");
+        Serial.println(pressureCur);
+    }
 
     switch(CUR_CALIBRATE_STATE)
     {
@@ -99,7 +109,7 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
                 runMotor(homeInc);//rotate gear cw
                 CUR_CALIBRATE_STATE = HOME_OUT;
             }
-            else if(digitalRead(SetButton))
+            else if(digitalRead(SetButton) || digitalRead(ToggleSwitch))
             {
                 delay(delay_const);
                 CUR_CALIBRATE_STATE = FINISH;
@@ -134,12 +144,20 @@ bool calibrate_FSM(LiquidCrystal * lcdPtr)
         }
         case FINISH:
         {
+            if(digitalRead(ToggleSwitch))
+            {
+                Serial.print("bag_angle,");
+                Serial.println(getAngle());
+            }
             lcdPtr->clear();
             lcdPtr->setCursor(0,1);
             lcdPtr->print(F("Finished Calibrating"));
             lcdPtr->clear();
             CUR_CALIBRATE_STATE = BEGIN_CALIBRATE;
-            return true;
+            if(!digitalRead(ToggleSwitch))
+            {
+                return true;
+            }
             break;
         }
     }

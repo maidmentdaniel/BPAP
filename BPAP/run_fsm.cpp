@@ -14,6 +14,7 @@ static volatile long _start_time = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
+
     if(digitalRead(SetButton))
     {
         stopAlarm();
@@ -30,17 +31,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         startALARM();
         lcdPtr->setCursor(19, 3);
         lcdPtr->print(RUN_STATE);
-        lcdPtr->print(2);
-    }
-
-    if(digitalRead(ToggleSwitch))
-    {
-        writeEEPROM(RUN_STATE);
-        // state_change = writeEEPROM(RUN_STATE);
-        // if(state_change)
-        // {
-        //     MAIN_STATE = STOP;
-        // }
+        lcdPtr->print(2);// Why?
     }
 
     if(digitalRead(Alarm_switch))
@@ -92,6 +83,23 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     lcdPtr->print(RUN_STATE);
     lcdPtr->print(_alarm_state);
 
+    // Datalogging
+    if(digitalRead(ToggleSwitch))
+    {
+        Serial.print("run_fsm,");
+        Serial.println(RUN_STATE);
+        Serial.print("BPM,");
+        Serial.print(getBPM());
+        Serial.print(",VOL,");
+        Serial.print(getVOL());
+        Serial.print(",IE,");
+        Serial.print(getIE());
+        Serial.print(",Pressure,");
+        Serial.print(_pressCur);
+        Serial.print(",Threshold,");
+        Serial.println(_pressThresh);
+    }
+
     switch(RUN_STATE)
     {
         case RUN_SETUP:
@@ -120,7 +128,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
                 lcdPtr->print(RUN_STATE);
                 lcdPtr->print(1);
             }
-            if(_pressCur <= _pressThresh)
+            if(_pressCur <= _pressThresh || digitalRead(ToggleSwitch))
             {
                 runMotor(getVOL()*getBagToCentre());
                 RUN_NEXT_STATE = SWEEP_IN;
@@ -158,7 +166,14 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         case DONE:
         {
             RUN_NEXT_STATE = RUN_SETUP;
-            return true;
+            if(digitalRead(!ToggleSwitch))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
             break;
         }
     }
