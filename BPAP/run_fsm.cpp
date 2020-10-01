@@ -14,7 +14,7 @@ static volatile long _start_time = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
-
+    writesubstate(RUN_STATE);
     if(digitalRead(SetButton))
     {
         stopAlarm();
@@ -82,23 +82,6 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     lcdPtr->setCursor(18, 3);
     lcdPtr->print(RUN_STATE);
     lcdPtr->print(_alarm_state);
-
-    // Datalogging
-    if(digitalRead(ToggleSwitch))
-    {
-        Serial.print("run_fsm,");
-        Serial.println(RUN_STATE);
-        Serial.print("BPM,");
-        Serial.print(getBPM());
-        Serial.print(",VOL,");
-        Serial.print(getVOL());
-        Serial.print(",IE,");
-        Serial.print(getIE());
-        Serial.print(",Pressure,");
-        Serial.print(_pressCur);
-        Serial.print(",Threshold,");
-        Serial.println(_pressThresh);
-    }
 
     switch(RUN_STATE)
     {

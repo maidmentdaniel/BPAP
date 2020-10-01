@@ -30,6 +30,8 @@ void setup()
 
 void loop()
 {
+    writestate(MAIN_STATE);
+    writetoserial();
     // Line 3:
     lcd.setCursor(17, 3);
     lcd.print(MAIN_STATE);

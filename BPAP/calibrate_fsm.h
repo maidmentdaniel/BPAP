@@ -5,6 +5,7 @@
 #include "pinout.h"
 #include "interface.h"
 #include "motor_ctrl.h"
+#include "log_fsm.h"
 
 #include <LiquidCrystal.h>
 

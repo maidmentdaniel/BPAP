@@ -6,6 +6,7 @@
 #include "interface.h"
 #include "motor_ctrl.h"
 #include <LiquidCrystal.h>
+#include "log_fsm.h"
 
 //ENUMERATIONS
 enum RUN_enum { RUN_SETUP,

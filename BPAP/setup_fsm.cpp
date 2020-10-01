@@ -4,31 +4,18 @@ SETUP_enum SETUP_STATE = SET_DISPLAY;
 
 bool setup_FSM( LiquidCrystal * lcdPtr)
 {
+
     setBPM(map(analogRead(ReadBPM_Val), 0, 1023, 40, -1));
     setVOL(analogRead(ReadTV_Val));
     setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
     setASSIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
     setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
+    //Datalogging
+    writesubstate(SETUP_STATE);
 
     // Line 3:
     lcdPtr->setCursor(18, 3);
     lcdPtr->print(SETUP_STATE);
-    // Datalogging
-    if(digitalRead(ToggleSwitch))
-    {
-        Serial.print("setup_fsm,");
-        Serial.println(SETUP_STATE);
-        Serial.print("BPM,");
-        Serial.print(getBPM());
-        Serial.print(",VOL,");
-        Serial.print(getVOL());
-        Serial.print(",IE,");
-        Serial.print(getIE());
-        Serial.print(",ASSIST,");
-        Serial.print(getASSIST());
-        Serial.print(",ALARM,");
-        Serial.println(getALARM());
-    }
 
     switch(SETUP_STATE)
     {

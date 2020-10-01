@@ -7,6 +7,9 @@ static byte _val = 0;
 
 static char _logstring[2] = {0};
 static uint8_t idx = 0;
+static int prev_time = 0;
+static int cur_time = 0;
+static int sample_interval = 1000;
 
 bool log_FSM(LiquidCrystal * lcdPtr)
 {
@@ -75,7 +78,7 @@ bool writeEEPROM(int x)
     }
 }
 
-void writemainstate(int x)
+void writestate(int x)
 {
     _logstring[0] = char(x);
 }
@@ -83,21 +86,25 @@ void writesubstate(int x)
 {
     _logstring[1] = char(x);
 }
-bool writetoserial(char x)
+void writetoserial()
 {
-    Serial.print(_logstring[0]);
-    Serial.print(',');
-    Serial.print(_logstring[1]);
-    Serial.print(',');
-    Serial.print(round(getBPM()));
-    Serial.print(',');
-    Serial.print((round((getVOL()*100))));
-    Serial.print(',');
-    Serial.print(round(getIE()));
-    Serial.print(',');
-    Serial.print(round(_pressCur));
-    Serial.print(',');
-    Serial.print(round(_pressThresh));
-    Serial.print(',');
-    Serial.println(getAngle());
+    cur_time = millis();
+    if(cur_time-prev_time >= sample_interval && digitalRead(ToggleSwitch))
+    {
+        Serial.print(_logstring[0]);
+        Serial.print(',');
+        Serial.print(_logstring[1]);
+        Serial.print(',');
+        Serial.print(round(getBPM()));
+        Serial.print(',');
+        Serial.print((round((getVOL()*100))));
+        Serial.print(',');
+        Serial.print(round(getIE()));
+        Serial.print(',');
+        Serial.print(round(map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986)));
+        Serial.print(',');
+        Serial.print(-1*getASSIST());
+        Serial.print(',');
+        Serial.println(getAngle());
+    }
 }

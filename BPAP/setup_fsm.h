@@ -5,6 +5,7 @@
 #include "pinout.h"
 #include "interface.h"
 #include <LiquidCrystal.h>
+#include "log_fsm.h"
 
 //ENUMERATIONS
 enum SETUP_enum {SET_DISPLAY, DISPLAY_VAL};

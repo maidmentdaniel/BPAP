@@ -4,7 +4,8 @@
 #include "Arduino.h"
 #include "pinout.h"
 #include "interface.h"
-# include "EEPROM.h"
+#include "EEPROM.h"
+#include "motor_ctrl.h"
 
 #include <LiquidCrystal.h>
 
@@ -19,5 +20,9 @@ enum log_enum
 //PROTOTYPES
 bool log_FSM(LiquidCrystal * lcdPtr);
 bool writeEEPROM(int x = 0);
+
+void writestate(int x = 0);
+void writesubstate(int x = 0);
+void writetoserial();
 
 #endif
