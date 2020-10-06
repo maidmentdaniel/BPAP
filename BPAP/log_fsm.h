@@ -15,11 +15,11 @@ enum log_enum
                 LOG_START,
                 LOG_READOUT,
                 LOG_STOP
-                };
+                };// ignore
 
 //PROTOTYPES
-bool log_FSM(LiquidCrystal * lcdPtr);
-bool writeEEPROM(int x = 0);
+bool log_FSM(LiquidCrystal * lcdPtr);// ignore
+bool writeEEPROM(int x = 0);// ignore
 
 void writestate(int x = 0);
 void writesubstate(int x = 0);

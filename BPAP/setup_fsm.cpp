@@ -14,7 +14,7 @@ bool setup_FSM( LiquidCrystal * lcdPtr)
     writesubstate(SETUP_STATE);
 
     // Line 3:
-    lcdPtr->setCursor(18, 3);
+    lcdPtr->setCursor(17, 3);
     lcdPtr->print(SETUP_STATE);
 
     switch(SETUP_STATE)

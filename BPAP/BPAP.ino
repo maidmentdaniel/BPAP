@@ -12,12 +12,14 @@
 //ENUMERATIONS
 enum main_enum {START, CALIBRATE,  SETUP, RUN, STOP, LOG};
 
+// LCD pinout, doesn't take compile time definitions as arguments.
 uint8_t rs = 13, en = 12, d4 = 11, d5 = 10, d6 = 9, d7 = 8;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+LiquidCrystal lcd(rs, en,  d4, d5, d6, d7);
 
 //VARIABLES
 main_enum MAIN_STATE = START;
 main_enum MAIN_PREV_STATE = MAIN_STATE;
+
 bool state_change = false;
 
 void setup()
@@ -33,10 +35,10 @@ void loop()
     writestate(MAIN_STATE);
     writetoserial();
     // Line 3:
-    lcd.setCursor(17, 3);
-    lcd.print(MAIN_STATE);
-    lcd.setCursor(16, 3);
+    lcd.setCursor(15, 3);
     lcd.print(digitalRead(ToggleSwitch));
+    lcd.setCursor(16, 3);
+    lcd.print(MAIN_STATE);
 
     switch(MAIN_STATE)
     {

@@ -2,7 +2,6 @@
 
 //PROTOTYPES
 RUN_enum RUN_STATE = RUN_SETUP;
-RUN_enum RUN_NEXT_STATE = RUN_SETUP;
 RUN_enum RUN_PREV_STATE = RUN_SETUP;
 
 static float _pressCur = 0.00;
@@ -14,7 +13,7 @@ static volatile long _start_time = 0;
 
 bool run_FSM( LiquidCrystal * lcdPtr)
 {
-    writesubstate(RUN_STATE);
+
     if(digitalRead(SetButton))
     {
         stopAlarm();
@@ -24,24 +23,24 @@ bool run_FSM( LiquidCrystal * lcdPtr)
         runMotor(ROM);
         RUN_NEXT_STATE = RUN_TO_SWITCH;
     }
+
+    writesubstate(RUN_STATE);
     _pressCur = map(analogRead(PressureSensorPIN), 0, 1023, -50.986, 50.986);
 
     if((_pressCur >= PIP) && _alarm_state)
     {
         startALARM();
         lcdPtr->setCursor(19, 3);
-        lcdPtr->print(RUN_STATE);
-        lcdPtr->print(2);// Why?
+        lcdPtr->print(2);// overpressure
     }
 
     if(digitalRead(Alarm_switch))
     {
         stopAlarm();
         _alarm_state = !_alarm_state;
-        _start_time = millis();
         lcdPtr->setCursor(19, 3);
-        lcdPtr->print(RUN_STATE);
-        lcdPtr->print(" ");
+        lcdPtr->print(_alarm_state);// If the alarm is enabled=>1, else 0.
+        _start_time = millis();//resets the alarm for the 30s timer.
         delay(delay_const);
     }
 
@@ -52,6 +51,8 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     setIE( map(analogRead(ReadIE_Val), 0, 1023, 5, 0));
     setASSIST(map(analogRead(ReadSensitivity), 0, 1023, 20, -1));
     setALARM(map(analogRead(ReadPEEP_alarm), 0, 1023, 40, -1));
+
+    RUN_STATE = RUN_NEXT_STATE;
 
     // Line 0:
     lcdPtr->setCursor(4,0);
@@ -77,10 +78,10 @@ bool run_FSM( LiquidCrystal * lcdPtr)
     lcdPtr->setCursor(10,2);
     lcdPtr->print(round(_pressThresh));
 
-    RUN_STATE = RUN_NEXT_STATE;
     // Line 3:
-    lcdPtr->setCursor(18, 3);
+    lcdPtr->setCursor(17, 3);
     lcdPtr->print(RUN_STATE);
+    lcdPtr->setCursor(18, 3);
     lcdPtr->print(_alarm_state);
 
     switch(RUN_STATE)
@@ -108,8 +109,7 @@ bool run_FSM( LiquidCrystal * lcdPtr)
             {
                 startALARM();
                 lcdPtr->setCursor(19, 3);
-                lcdPtr->print(RUN_STATE);
-                lcdPtr->print(1);
+                lcdPtr->print(1);// implies patient hasn't attempted a breath in 30s
             }
             if(_pressCur <= _pressThresh || digitalRead(ToggleSwitch))
             {

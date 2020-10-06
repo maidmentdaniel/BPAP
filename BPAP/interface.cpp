@@ -47,7 +47,7 @@ void addToSwitchToBag(float delta){_switch_to_bag += delta;}
 
 float calcStepRate(bool inhale, float sweep, bool debug)
 {
-    _sweep = abs(sweep);
+    _sweep = abs(sweep);                  // degrees that the arm should move through
     _bps = _bpm/60;                      // beats per second [Hz]
     _T = 1/_bps;                          // period per beat [s]
     _in_T = _T/(_ie+1);                   // inhilation period [s]

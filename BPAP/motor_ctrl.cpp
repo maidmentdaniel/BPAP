@@ -32,7 +32,6 @@ void setMotor(float fstep)
     _fstep = fstep;
     _ICR4 = round((fck)/(N*_fstep));
     _OCR4A = round(0.5*_ICR4);
-    //Set frequency for an I:E ratio of 1:3 at 20BPM
     ICR4 = _ICR4;
     //Duty cycle is 50%, hence OCR4B = 0.5*ICR4
     OCR4A = _OCR4A;
